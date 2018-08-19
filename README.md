@@ -1,0 +1,1 @@
+Node app to schedule board game sessions
