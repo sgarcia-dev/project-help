@@ -22,4 +22,15 @@ describe('/', function () {
             expect(res).to.be.html;
         });
     });
-})
+});
+
+describe('/loggedin.html', function () {
+    it("should return status 200 and html code", function () {
+        return chai.request(app)
+        .get('/')
+        .then(function(res){
+            expect(res).to.have.status(200);
+            expect(res).to.be.html;
+        });
+    });
+});
