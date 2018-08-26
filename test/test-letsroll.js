@@ -24,7 +24,7 @@ describe('/', function () {
     });
 });
 
-describe('/loggedin.html', function () {
+/*describe('/loggedin.html', function () {
     it("should return status 200 and html code", function () {
         return chai.request(app)
         .get('/')
@@ -33,4 +33,4 @@ describe('/loggedin.html', function () {
             expect(res).to.be.html;
         });
     });
-});
+});*/
