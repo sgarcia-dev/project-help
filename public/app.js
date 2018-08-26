@@ -132,145 +132,92 @@ function getGameEvents(callbackFn) {
 
 // this function stays the same when we connect
 // to real API later
-
-
 function displayGameEvents(data) {
+
     for (index in data.gameEvents) {
 
         //GET THE DATE AND TIME
-        var myDate = parseInt(data.gameEvents[index].gameDate);
-        var date = new Date(myDate);
+        var gameDate1 = parseInt(data.gameEvents[index].gameDate);
+        //var date2 = new Date(myDate);
+        var gameDate2 = new Date(gameDate1);
+        var date = gameDate2.getDate();
+        var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
+        var year = gameDate2.getFullYear();
+        var dateString = date + "-" +(month + 1) + "-" + year;
+        console.log(dateString);
+        var timestamp = gameDate2.getTime();
+        console.log(timestamp);
         //console.log(date);
         //var myDate = new Date();
         //myDate.toLocaleTimeString();
 
+
+
+        //GET ATTENDEES
+
+        /*for (let i=0; i<=data.gameEvents[index].attendees.length; i++) {
+            gameAttendees.push(data.gameEvents[index].attendees[i].userName);
+        }
+        console.log(gameAttendees);
+        //}
+        //var attendeesArray = {};
+        var attendeesArray = data.gameEvents[index].attendees.push(function(attendees){ 
+            var attendeesArray = {};
+            //attendeesArray.push(attendees.userName);
+            attendeesArray[attendees.userName] = attendees.userName;
+            return attendeesArray;
+         });
+
+         console.log(attendeesArray);
+
+         for (let value of Object.values(data.gameEvents[index].attendees.userName)) {
+          //  console.log(value);
+            gameAttendees.push(userName.value);
+        }
+        gameAttendees.toString();
+        console.log(gameAttendees);*/
+
+        var gameAttendees = [];
+        for (let i = 0; i < data.gameEvents[index].attendees.length; i++) {
+            var attendee = Object.values(data.gameEvents[index].attendees[i]);
+            console.log(Object.values(attendee));
+            gameAttendees.push(attendee);
+        }
+
+        var gameComments = [];
+        for (let i = 0; i < data.gameEvents[index].comments.length; i++) {
+            var comment = Object.values(data.gameEvents[index].comments[i]);
+            console.log(Object.values(comment));
+            gameComments.push(comment);
+        }
+      
+
+
         //CALCULATE SPOTS LEFT
         var currentPlayerCount = parseInt(data.gameEvents[index].attendees.length);
         var maxPlayersCount = parseInt(data.gameEvents[index].maxPlayers);
-        var PlayerSpacesLeft = maxPlayersCount - currentPlayerCount;
+        var playerSpacesLeft = maxPlayersCount - currentPlayerCount;
 
         $('.cards').append(`
-        <div class="card">
-        <div class="card-title">${data.gameEvents[index].gameTitle}
-            <a href="#" class="toggle-info btn">
-                <span class="left"></span>
-                <span class="right"></span>
-            </a>
-            <h2>
-            ffffffffffff
-                <small>ddddddddddd</small>
-            </h2>
+        <button class="accordion">
+            ${data.gameEvents[index].gameTitle}<br/>
+            ${dateString}   
+            ${playerSpacesLeft} spaces left!
+        </button>
+        <div class="panel">
+          <p>HOST: ${data.gameEvents[index].host}</p>
+          <p>DESCRIPTION: ${data.gameEvents[index].content}</p>
+          <p>MAX PLAYERS: ${data.gameEvents[index].maxPlayers}</p>
+          <p>ATTENDEES: ${gameAttendees}</p>
+          <p>COMMENTS: ${gameComments}</p>
         </div>
-        <div class="card-flap flap1">
-            <div class="card-description">
-                This grid is an attempt to make something nice that works on touch devices. Ignoring hover states when they're not available
-                etc.
-            </div>
-            <div class="card-flap flap2">
-                <div class="card-actions">
-                    <a href="#" class="btn">Read more</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     `);
+    }
+    makeCollapsible();
 }
-}
 
-/*
-
-
-        //////////////////////
-        
-        <div class=" card [ is-collapsed ] ">
-            <div class="card__inner [ js-expander ]">
-                ${data.gameEvents[index].gameTitle}<br/> 
-                ${date}<br/>
-                ${PlayerSpacesLeft} spots left!<br/>
-            </div>
-            <div class="card__expander">
-                        <i class="fa fa-close [ js-collapser ]"></i>
-                        Expander
-                    </div>
-        </div>
       
 
-        <div class="row">
-          <div class="col-6"> 
-            <ul>
-              <lh>${data.gameEvents[index].gameTitle} </lh>
-              <li>${date}</li>
-              <li>${PlayerSpacesLeft} spots left!</li>
-              <div class="moreInfo">
-              <li>${data.gameEvents[index].gameTime}</li>
-              <li>${data.gameEvents[index].location[index]}</li>
-              <li>${data.gameEvents[index].attendees}</li>
-              <li>${data.gameEvents[index].comments}</li>
-              </div>
-            </ul>
-          </div>  
-          <div class="col-6"> 
-            <button onclick="showMoreInfo()">More Info</button>
-          </div>  
-        </div> 
-*/
-///////////////////////////
-
-
-
-$(document).ready(function(){
-    var zindex = 10;
-    
-    $("div.card").click(function(e){
-      e.preventDefault();
-  
-      var isShowing = false;
-  
-      if ($(this).hasClass("show")) {
-        isShowing = true
-      }
-  
-      if ($("div.cards").hasClass("showing")) {
-        // a card is already in view
-        $("div.card.show")
-          .removeClass("show");
-  
-        if (isShowing) {
-          // this card was showing - reset the grid
-          $("div.cards")
-            .removeClass("showing");
-        } else {
-          // this card isn't showing - get in with it
-          $(this)
-            .css({zIndex: zindex})
-            .addClass("show");
-  
-        }
-  
-        zindex++;
-  
-      } else {
-        // no cards in view
-        $("div.cards")
-          .addClass("showing");
-        $(this)
-          .css({zIndex:zindex})
-          .addClass("show");
-  
-        zindex++;
-      }
-      
-    });
-  });
-
-
-
-
-
-
-
-////////////////////////////
 // this function can stay the same even when we
 // are connecting to real API
 function getAndDisplayGameEvents() {
@@ -278,16 +225,34 @@ function getAndDisplayGameEvents() {
     getGameEvents(displayGameEvents);
 }
 
-//  on page load do this
-$(function() {
-   getAndDisplayGameEvents();
-//  enableGoToLogin();
-});
 
+function makeCollapsible(){        
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight){
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+      });
+    }
+};
+
+
+//  on page load do this
+$(function () {
+    getAndDisplayGameEvents();
+})
+
+//  enableGoToLogin();
+/*
 $("#read").on('click', function (event) {
     console.log("reading");
-
     event.preventDefault();
     getAndDisplayGameEvents();
-
-});
+});*/
