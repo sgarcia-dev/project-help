@@ -1,0 +1,52 @@
+{
+    "host": "artyJones",
+    "gameTitle": "Monopoly",
+    "maxPlayers": "4",
+    "gameDate": "1470016976609",
+    "gameTime": "2:00pm",
+    "location": {
+        "street": "123 Main St",
+        "city": "Phoenix",
+        "state": "AZ",
+        "zipCode": "12345"
+    },
+    "attendees": [{
+            "userName": "artyJones"
+        }]
+} {
+        "id": 3,
+        "host": "artyJones",
+        "gameTitle": "Conan",
+        "maxPlayers": "4",
+        "gameDate": "1470016976609",
+        "gameTime": "2:00pm",
+        "location": {
+            "street": "123 Main St",
+            "city": "Phoenix",
+            "state": "AZ",
+            "zipCode": "12345"
+        },
+        "attendees": [{
+                "userName": "mikeSmith"
+            },
+            {
+                "userName": "marissaCole"
+            },
+            {
+                "userName": "andyFaegan"
+            },
+            {
+                "userName": "sonnyRadosh"
+            }
+        ],
+        "comments": [{
+                "content": "Anyone wants to run it?"
+            },
+            {
+                "content": "Nope."
+            },
+            {
+                "content": "Maybe."
+            }
+        ]
+    }

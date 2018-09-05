@@ -256,3 +256,16 @@ $("#read").on('click', function (event) {
     event.preventDefault();
     getAndDisplayGameEvents();
 });*/
+
+
+/*NOTES FROM SUNDAY 5:40 
+comments.map(function(commment) {
+  return `<h1>${comment.content}</h1>`;
+}).join('\n')
+
+$("div.cards").click('div.card', function(e){
+
+    travis encrypt $(heroku auth:token) --add deploy.api_key
+
+
+*/
