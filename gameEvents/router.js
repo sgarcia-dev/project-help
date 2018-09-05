@@ -8,7 +8,11 @@ const app = express();
 app.use(morgan('common'));
 app.use(express.json());
 const jwtAuth = passport.authenticate("jwt", {session: false});
-
+const bodyParser = require('body-parser');
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+const jsonParser = bodyParser.json();
+//app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', jwtAuth, (req, res) => {
     if (req.user) {
@@ -72,7 +76,7 @@ router.get('/:id', jwtAuth, (req, res) => {
     }
 });
 
-router.post('/', jwtAuth, (req, res) => {
+router.post('/', jsonParser, jwtAuth, (req, res) => {
     const requiredFields = ['gameTitle', 'host', 'gameTime'];
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -92,17 +96,17 @@ router.post('/', jwtAuth, (req, res) => {
             }
         });
         if ( propertiesNotFound > 0) {
-            const message = `Missing \`${field}\` in request body`;
+            const message = `Missing \`${}\` in request body`;
             console.error(message);
             return res.status(400).send(message);
         }*/
   
 
-    if (req.user) {
-        User
-            .findById(req.body.user_id)
-            .then(user => {
-                if (user) {
+   // if (req.user) {
+       // User
+           // .findById(req.body.user_id)
+          //  .then(user => {
+               // if (user) {
                     GameEvent
                         .create({
                             host: req.body.id,
@@ -133,23 +137,23 @@ router.post('/', jwtAuth, (req, res) => {
                                 error: 'Something went wrong'
                             });
                         });
-                } else {
-                    const message = `User not found`;
-                    console.error(message);
-                    return res.status(400).send(message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({
-                    error: 'something went horribly awry'
-                });
-            });
-    }
+               // } //else {
+               //    const message = `User not found`;
+               //     console.error(message);
+               //     return res.status(400).send(message);
+               // }
+            //}
+            //.catch(err => {
+           //     console.error(err);
+          //      res.status(500).json({
+          //          error: 'something went horribly awry'
+               // });
+          //  });
+    //}
 });
 
 
-router.put('/:id', jwtAuth, (req, res) => {
+router.put('/:id', jsonParser, jwtAuth, (req, res) => {
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
         res.status(400).json({
             error: 'Request path id and request body id values must match'
