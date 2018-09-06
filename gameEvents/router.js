@@ -49,9 +49,12 @@ router.get('/', jwtAuth, (req, res) => {
 
 router.get('/:id', jwtAuth, (req, res) => {
     if (req.user) {
-        GameEvent
-            .findById(req.params.id)
-            .then(gameEvent => {
+        if (!(GameEvent.findById(req.params.id))){
+            return res.status.send(204);
+        }
+        else {
+              GameEvent.findById(req.params.id)
+            .then(gameEvent => {//if doesnt exist return 404
                 res.json({
                         id: gameEvent._id,
                         host: gameEvent.user,
@@ -71,13 +74,13 @@ router.get('/:id', jwtAuth, (req, res) => {
                     error: 'something went terribly wrong'
                 });
             })
-    } else {
+    }} else {
         res.status(400);
     }
 });
 
 router.post('/', jsonParser, jwtAuth, (req, res) => {
-    const requiredFields = ['gameTitle', 'host', 'gameTime'];
+    const requiredFields = ['gameTitle', 'gameDate', 'maxPlayers', 'gameTime'];
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
             const message = `Missing ${field} in request body`;
@@ -85,23 +88,9 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
             return res.status(400).send(message);
         }
     });
-      //}
-/*
-        const propertiesNotFound = [];
-        const propertiesToCheck = ['gameTitle', 'host', 'gameTime'];
-        const objectToCheck = req.body;
-        propertiesToCheck.forEach(propertyName => {
-            if (!objectToCheck.hasOwnProperty(propertyName)) {
-                propertiesNotFound.push(propertyName);
-            }
-        });
-        if ( propertiesNotFound > 0) {
-            const message = `Missing \`${}\` in request body`;
-            console.error(message);
-            return res.status(400).send(message);
-        }*/
-  
+    console.log(req.user);
 
+      //}
    // if (req.user) {
        // User
            // .findById(req.body.user_id)
@@ -109,7 +98,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
                // if (user) {
                     GameEvent
                         .create({
-                            host: req.body.id,
+                            host: req.user.id,//req.body.id,//req.user.username,/
                             gameTitle: req.body.gameTitle,
                             maxPlayers: req.body.maxPlayers,
                             gameDate: req.body.gameDate,
@@ -119,9 +108,10 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
                             attendees: req.body.attendees,
                             publishedAt: req.body.publishedAt
                         })
-                        .then(gameEvent => res.status(201).json({
-                            id: gameEvent.id,
-                            host: `${host.firstName} ${host.lastName}`,
+                        .then(gameEvent => res.status(201).json(
+                            gameEvent
+                            /*id: gameEvent.id,
+                            host: gameEvent.host,//`${host.firstName} ${host.lastName}`,
                             gameTitle: gameEvent.gameTitle,
                             maxPlayers: gameEvent.maxPlayers,
                             gameDate: gameEvent.gameDate,
@@ -129,8 +119,8 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
                             address: gameEvent.address,
                             //comments: gameEvent.comments,
                             attendees: gameEvent.attendees,
-                            publishedAt: gameEvent.publishedAt
-                        }))
+                            publishedAt: gameEvent.publishedAt*/
+                        ))
                         .catch(err => {
                             console.error(err);
                             res.status(500).json({
@@ -155,7 +145,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
 
 router.put('/:id', jsonParser, jwtAuth, (req, res) => {
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
-        res.status(400).json({
+        return res.status(400).json({
             error: 'Request path id and request body id values must match'
         });
     }

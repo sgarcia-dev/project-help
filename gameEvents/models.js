@@ -37,6 +37,11 @@ gameEventSchema.pre('findOne', function(next) {
     next();
 });
 
+//gameEventSchema.post('find', user) {
+//    this.populate('host', userName);
+//    next();
+//};
+
 gameEventSchema.virtual('userName').get(function(){
     return `${this.user.firstName} ${this.user.lastName}`.trim();
 });
