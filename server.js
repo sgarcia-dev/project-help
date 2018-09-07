@@ -17,6 +17,7 @@ const {router: gameEventsRouter } = require('./gameEvents');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 mongoose.Promise = global.Promise;
+//mongoose.set('useCreateIndex', true); - should fix deprecation warning but isn't
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -24,6 +25,9 @@ const app = express();
 
 // Logging
 app.use(morgan('common'));
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
 
 // CORS
 app.use(function (req, res, next) {

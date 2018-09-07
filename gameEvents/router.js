@@ -6,20 +6,17 @@ const {jwtStrategy} = require("../auth");
 const morgan = require('morgan');
 const app = express();
 app.use(morgan('common'));
-app.use(express.json());
 const jwtAuth = passport.authenticate("jwt", {session: false});
-const bodyParser = require('body-parser');
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-const jsonParser = bodyParser.json();
+
+//const jsonParser = bodyParser.json();
 //app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', jwtAuth, (req, res) => {
     if (req.user) {
         GameEvent
-            .find({
-                user_id: req.user.id
-            })
+            .find(
+                //{host: req.user.id}
+            )
             .then(gameEvents => {
                 res.json(gameEvents.map(gameEvent => {
                     return {
@@ -79,7 +76,7 @@ router.get('/:id', jwtAuth, (req, res) => {
     }
 });
 
-router.post('/', jsonParser, jwtAuth, (req, res) => {
+router.post('/', jwtAuth, (req, res) => {
     const requiredFields = ['gameTitle', 'gameDate', 'maxPlayers', 'gameTime'];
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -143,7 +140,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
 });
 
 
-router.put('/:id', jsonParser, jwtAuth, (req, res) => {
+router.put('/:id', jwtAuth, (req, res) => {
     if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
         return res.status(400).json({
             error: 'Request path id and request body id values must match'
