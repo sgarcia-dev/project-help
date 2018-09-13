@@ -7,9 +7,78 @@
 function getGameEvents(callbackFn) {
     // we use a `setTimeout` to make this asynchronous
     // as it would be with a real AJAX call.
-    setTimeout(function () {
-        callbackFn(MOCK_GAME_EVENTS)
-    }, 1);
+    //setTimeout(function () {
+    //    callbackFn(MOCK_GAME_EVENTS)
+    //}, 1);
+
+    //$.getJSON('api/gameEvents', function(data){console.log(data);});//callbackFn);
+    //$.getJSON('api/gameEvents', callbackFn);
+
+
+var mock = "arrg"; //JSON.stringify({"name2": "arrg"});
+$("#viewGames").on('click', function(){
+    //$.getJSON('api/gameEvents', function(data){console.log(data);});//callbackFn);
+    $.ajax({
+		type: 'GET',
+		url: '/api/gameEvents',
+		contentType: 'application/json',
+		dataType: 'json',
+		//data: JSON.stringify(data),
+		success: $('#listGames').append(data),//displayGameEvents(data),//function(data){location.reload},
+		error: err => {
+			alert('Internal Server Error (see console)');
+			console.error(err);
+        }
+    });
+});
+
+
+    //DELETE GAME EVENTS
+  /*  $('.deleteBtn').on('click', function(){
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/gameEvents/:id',
+            success: function(data){
+                //do something with data via front nd
+                location.reload();
+            }
+        });
+    });*/
+
+    //POST GAME EVENTS
+    $('#createBtn').on('click', function(){
+        alert("clicked create");
+        /*$.ajax({
+            type: 'POST',
+            url: '/api/gameEvents/',
+            success: function(data){
+                //do something with data via front nd
+                location.reload();
+            }
+        });*/
+    });
+
+
+    
+
+
+
+
+
+
+        /*
+    ajax({
+		method: 'GET',
+		url: `/api/users`,
+		data: 'json',
+		callback: post => {
+			alert('Post changes saved succesfully, redirecting ...');
+			window.open(`/post/details.html?id=${postID}`, '_self');
+		}
+    });
+    $(document).ready(onReady);*/
+
+
 }
 
 // this function stays the same when we connect
@@ -79,7 +148,7 @@ function displayGameEvents(data) {
         var currentPlayerCount = parseInt(data.gameEvents[index].attendees.length);
         var maxPlayersCount = parseInt(data.gameEvents[index].maxPlayers);
         var playerSpacesLeft = maxPlayersCount - currentPlayerCount;
-
+        
         $('.cards').append(`
         <button class="accordion">
             ${data.gameEvents[index].gameTitle}<br/>
@@ -90,11 +159,12 @@ function displayGameEvents(data) {
           <p>HOST: ${data.gameEvents[index].host}</p>
           <p>DESCRIPTION: ${data.gameEvents[index].content}</p>
           <p>MAX PLAYERS: ${data.gameEvents[index].maxPlayers}</p>
-          <p>ATTENDEES: ${gameAttendees}</p>
-          <p>COMMENTS: ${gameComments}</p>
+          
         </div>
     `);
     }
+    //<p>ATTENDEES: ${gameAttendees}</p>
+    //<p>COMMENTS: ${gameComments}</p>
     makeCollapsible();
 }
 
@@ -128,6 +198,7 @@ function makeCollapsible(){
 
 //  on page load do this
 $(function () {
+    //$.getJSON('api/get', getAndDisplayGameEvents(););
     getAndDisplayGameEvents();
 })
 

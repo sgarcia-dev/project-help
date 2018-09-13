@@ -22,7 +22,7 @@ mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require('./config');
 
 const app = express();
-
+app.use(express.static('public'));
 // Logging
 app.use(morgan('common'));
 const bodyParser = require('body-parser');
@@ -168,7 +168,7 @@ router.post('/users', (req, res) => {
         })
         .then(user => {
             if (user) {
-                const message = `Username already taken`;
+                const message = `userName already taken`;
                 console.error(message);
                 return res.status(400).send(message);
             } else {
@@ -223,7 +223,7 @@ app.put('/users/:id', (req, res) => {
         })
         .then(user => {
             if (user) {
-                const message = `Username already taken`;
+                const message = `userName already taken`;
                 console.error(message);
                 return res.status(400).send(message);
             } else {

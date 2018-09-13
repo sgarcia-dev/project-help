@@ -1,11 +1,14 @@
-'use strict';
+/*'use strict';
+require("dotenv").config();
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-
+const {createAuthToken} = require("../auth/router");
 const { app, runServer, closeServer } = require('../server');
-const { User } = require('./users/models');
-const { GameEvent } = require('./gameEvents/models');
+//const { User } = require('../users/models');
+//const { GameEvent } = require('../gameEvents/models');
+//const {seedDatabase, tearDownDb, generateEventData, preAuthHost} = require("../userSeedData.json");
+//
 
 const expect = chai.expect;
 
@@ -25,11 +28,12 @@ describe('/', function () {
         });
     });
 });
-/*
+
 describe('GameEvent', function () {
     before(function(){return runServer();})
     after(function(){return closeServer();})
     it("should list game events on GET", function () {
+        
         return chai.request(app)
         .get('/api/gameEvents')
         .then(function(res){

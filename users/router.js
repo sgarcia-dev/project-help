@@ -8,9 +8,14 @@ const router = express.Router();
 
 const jsonParser = bodyParser.json();
 
+const passport = require("passport");
+const {jwtStrategy} = require("../auth");
+const jwtAuth = passport.authenticate("jwt", {session: false});
+
+
 // Post to register a new user
 router.post('/', jsonParser, (req, res) => {
-  const requiredFields = ['username', 'password'];
+  const requiredFields = ['userName', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
@@ -22,7 +27,7 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ['username', 'password', 'firstName', 'lastName'];
+  const stringFields = ['userName', 'password', 'firstName', 'lastName'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
@@ -36,14 +41,14 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  // If the username and password aren't trimmed we give an error.  Users might
+  // If the userName and password aren't trimmed we give an error.  Users might
   // expect that these will work without trimming (i.e. they want the password
   // "foobar ", including the space at the end).  We need to reject such values
   // explicitly so the users know what's happening, rather than silently
   // trimming them and expecting the user to understand.
   // We'll silently trim the other fields, because they aren't credentials used
   // to log in, so it's less of a problem.
-  const explicityTrimmedFields = ['username', 'password'];
+  const explicityTrimmedFields = ['userName', 'password'];
   const nonTrimmedField = explicityTrimmedFields.find(
     field => req.body[field].trim() !== req.body[field]
   );
@@ -58,7 +63,7 @@ router.post('/', jsonParser, (req, res) => {
   }
 
   const sizedFields = {
-    username: {
+    userName: {
       min: 1
     },
     password: {
@@ -92,22 +97,22 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  let {username, password, firstName = '', lastName = ''} = req.body;
-  // Username and password come in pre-trimmed, otherwise we throw an error
+  let {userName, password, firstName = '', lastName = ''} = req.body;
+  // userName and password come in pre-trimmed, otherwise we throw an error
   // before this
   firstName = firstName.trim();
   lastName = lastName.trim();
 
-  return User.find({username})
+  return User.find({userName})
     .count()
     .then(count => {
       if (count > 0) {
-        // There is an existing user with the same username
+        // There is an existing user with the same userName
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
-          location: 'username'
+          message: 'userName already taken',
+          location: 'userName'
         });
       }
       // If there is no existing user, hash the password
@@ -115,7 +120,7 @@ router.post('/', jsonParser, (req, res) => {
     })
     .then(hash => {
       return User.create({
-        username,
+        userName,
         password: hash,
         firstName,
         lastName
@@ -127,6 +132,7 @@ router.post('/', jsonParser, (req, res) => {
     .catch(err => {
       // Forward validation errors on to the client, otherwise give a 500
       // error because something unexpected has happened
+      console.log(err);
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
@@ -143,5 +149,21 @@ router.get('/', (req, res) => {
     .then(users => res.json(users.map(user => user.serialize())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
+
+router.get('/:id', (req, res) => {
+  return User.findById(req.params.id)
+    .then((user => {
+      res.json({
+              id: user._id,
+              firstName: user.findById,
+              lastName: user.lastName,
+              userName: user.userName,
+              password: user.password
+      })
+    }))
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
+
 
 module.exports = {router};

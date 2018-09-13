@@ -11,7 +11,7 @@ const jwtAuth = passport.authenticate("jwt", {session: false});
 //const jsonParser = bodyParser.json();
 //app.use(bodyParser.urlencoded({ extended: false }));
 
-router.get('/', jwtAuth, (req, res) => {
+router.get('/', (req, res) => {//'/', jwtAuth, (re
     if (req.user) {
         GameEvent
             .find(
@@ -95,7 +95,7 @@ router.post('/', jwtAuth, (req, res) => {
                // if (user) {
                     GameEvent
                         .create({
-                            host: req.user.id,//req.body.id,//req.user.username,/
+                            host: req.user.id,//req.body.id,//req.user.userName,/
                             gameTitle: req.body.gameTitle,
                             maxPlayers: req.body.maxPlayers,
                             gameDate: req.body.gameDate,
