@@ -28,40 +28,12 @@ function getGameEvents(callbackFn) {
         }
     });
 
-    // });
-
-
-    //DELETE GAME EVENTS
-    /*  $('.deleteBtn').on('click', function(){
-          $.ajax({
-              type: 'DELETE',
-              url: '/api/gameEvents/:id',
-              success: function(data){
-                  //do something with data via front nd
-                  location.reload();
-              }
-          });
-      });*/
-
-    // });
-
 }
 
 // this function stays the same when we connect
 // to real API later
 function displayGameEvents(data) {
-
-    //console.log(data);
-    /*
-    $.each(data, function () {
-        $('.cards').append(`
-        <button class="accordion">
-            ${this.gameTitle}<br/>
-          
-        </button>`);
-    });*/
-
-    /////////////////////////${data.gameEvents[index].gameTitle}<br/>
+    //console.log(data); ////${data.gameEvents[index].gameTitle}<br/>
     $.each(data, function () {
         //for (index in data.gameEvents) {
         //console.log(data.gameEvents.index);
@@ -73,9 +45,9 @@ function displayGameEvents(data) {
         var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
-        console.log(dateString);
+        //console.log(dateString);
         var timestamp = gameDate2.getTime();
-        console.log(timestamp);
+        //console.log(timestamp);
         //console.log(date);
         //var myDate = new Date();
         //myDate.toLocaleTimeString();
@@ -85,6 +57,7 @@ function displayGameEvents(data) {
         //var maxPlayersCount = parseInt(this.maxPlayers);
         //var playerSpacesLeft = maxPlayersCount - currentPlayerCount;
 
+        //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
             <button class="accordion">
                 ${this.gameTitle}<br/>
@@ -96,8 +69,18 @@ function displayGameEvents(data) {
               <p>MAX PLAYERS: ${this.maxPlayers}</p>
               <p>LOCATION: ${this.address}</p>
               <p>TIME: ${this.gameTime}</p>
+              <div id="userButtons">
+                <button type="button" id="editBtn" class="button">Edit Game</button>
+                <button type="button"  id="deleteBtn">Delete Game</button>
+                </div>
             </div>
-        `)
+        `);
+
+        //IF user created game add user buttons
+        //$('#userButtons').append(`
+        //<button type="submit" id="editBtn" class="button">Edit Game</button>
+        //<button type="submit" id="deleteBtn" class="button">Delete Game</button>
+
     });
 
     makeCollapsible();
@@ -130,12 +113,9 @@ function getAndDisplayGameEvents() {
 }
 
 
-
-
 function addNewGameEvent() {
     $('#js-create-form').on('submit', function (event) {
-        const gameTitle = $("#gameTitle").val();
-        //const gameTitle = $gameTitle;
+        const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
         const maxPlayers = $("#maxPlayers").val();
         const host = $("#userName").val();
         const street = $("#street").val();
@@ -158,7 +138,7 @@ function addNewGameEvent() {
             gameDate: gameDate,
             gameTime: gameTime
         };
-        console.log(newGame);
+        //console.log(newGame);
 
         $.ajax({
             type: 'POST',
@@ -180,13 +160,32 @@ function backToDashboard() {
     window.location.replace('../index.html');
 }
 
+function deleteGameEvent() {
+    $("div").on('click', '#deleteBtn', function (event) {
+        console.log('clicked delete btn');
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/gameEvents/:id',
+            success: handleDelete,
+            error: err => {
+                alert('Internal Server Error (see console)');
+                console.error(err);
+            }
+        });
+    });
+    //event.preventDefault();
+}
+
+function handleDelete() {
+    console.log("deleted");
+}
 
 
 //  on page load do this
 $(function () {
     getAndDisplayGameEvents(); //GET
     addNewGameEvent(); //POST
-    //deleteGameEvent(); //DELETE
+    deleteGameEvent(); //DELETE
     //editGameEvent(); //PUT
 
 })

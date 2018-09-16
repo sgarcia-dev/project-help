@@ -21,7 +21,7 @@ router.get('/', (req, res) => { //'/', jwtAuth, (re
     GameEvent
         .find({})
         .then(gameEvents => {
-            console.log(gameEvents);
+            //console.log(gameEvents);
             res.json(gameEvents);
         })
         .catch(err => {
@@ -170,23 +170,23 @@ router.put('/:id', jwtAuth, (req, res) => {
 });
 
 
-router.delete('/:id', jwtAuth, (req, res) => {
-    if (req.user) {
-        GameEvent
-            .findByIdAndRemove(req.params.id)
-            .then(() => {
-                //console.log(`Deleted event with id \`${req.params.id}\``);
-                res.status(204).json({
-                    message: `Deleted event with id \`${req.params.id}\``
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({
-                    error: 'Something went wrong'
-                });
+router.delete('/:id', (req, res) => {
+    //if (req.user) {
+    GameEvent
+        .findByIdAndRemove(req.params.id)
+        .then(() => {
+            //console.log(`Deleted event with id \`${req.params.id}\``);
+            res.status(204).json({
+                message: `Deleted event with id \`${req.params.id}\``
             });
-    }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                error: 'Something went wrong'
+            });
+        });
+    ///}
 });
 
 

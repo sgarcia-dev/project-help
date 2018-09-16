@@ -9,7 +9,8 @@ var commentSchema = new mongoose.Schema({
 const gameEventSchema = new mongoose.Schema({
     //host:      { type: String, required: true },
     host: {
-        type: mongoose.Schema.Types.ObjectId,
+        //type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'user'
     },
     gameTitle: {
@@ -34,10 +35,10 @@ const gameEventSchema = new mongoose.Schema({
         state: String,
         zipCode: Number,
     },
-    attendees: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
+    //attendees: [{
+    //    type: mongoose.Schema.Types.ObjectId,
+    //    ref: 'User'
+    //}],
     //comments: [commentSchema],
     gameInfo: {
         type: String
