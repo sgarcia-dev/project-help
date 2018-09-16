@@ -180,6 +180,63 @@ function handleDelete() {
     console.log("deleted");
 }
 
+function login() {
+    $('#js-login-form').on('submit', function (event) {
+        console.log('clicked log');
+        const userName = $("#userName").val();
+        const password = $("#password").val();
+
+        const newUser = {
+            userName: userName,
+            password: password
+        };
+        console.log(newUser);
+        event.preventDefault();
+    });
+    /*
+        $.ajax({
+            type: 'GET',
+            url: '/api/users/:id',
+            contentType: 'application/json',
+            dataType: 'json',
+            //data: JSON.stringify(data),
+            success: backToDashboard,
+            error: err => {
+                alert('Internal Server Error (see console)');
+                console.error(err);
+            }
+        });*/
+}
+
+function signup() {
+    $('#js-signup-form').on('submit', function (event) {
+        console.log('clicked signup');
+        const userName = $("#userName").val();
+        const password = $("#password").val();
+        //add more stuff later
+
+        const newUser = {
+            userName: userName,
+            password: password
+        };
+        console.log(newUser);
+        $.ajax({
+            type: 'POST',
+            url: '/api/users/',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(newUser),
+            success: backToDashboard,
+            error: err => {
+                alert('Internal Server Error (see console)');
+                console.error(err);
+            }
+        });
+        event.preventDefault();
+    });
+}
+
+
 
 //  on page load do this
 $(function () {
@@ -187,5 +244,7 @@ $(function () {
     addNewGameEvent(); //POST
     deleteGameEvent(); //DELETE
     //editGameEvent(); //PUT
+    login();
+    signup();
 
 })
