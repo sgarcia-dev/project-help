@@ -1,38 +1,55 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-  
-var commentSchema = new mongoose.Schema({ content: 'string' });
+
+var commentSchema = new mongoose.Schema({
+    content: 'string'
+});
 
 const gameEventSchema = new mongoose.Schema({
     //host:      { type: String, required: true },
-    host: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    gameTitle: { type: String, required: true },
-    maxPlayers:{ type: Number, required: true },
-    gameDate:  { type: Date, default: Date.now },
-    gameTime:  { type: String, required: true },
+    host: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
+    gameTitle: {
+        type: String,
+        required: true
+    },
+    maxPlayers: {
+        type: Number,
+        required: true
+    },
+    gameDate: {
+        type: Date,
+        default: Date.now,
+    },
+    gameTime: {
+        type: String,
+        required: true
+    },
     location: {
         street: String,
         city: String,
         state: String,
-        zipCode: Number, 
+        zipCode: Number,
     },
     attendees: [{
-         type: mongoose.Schema.Types.ObjectId, ref: 'User' 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }],
     //comments: [commentSchema],
-    publishedAt: {
-        type: Date,
-        default: Date.now
+    gameInfo: {
+        type: String
     }
 }) //consider getting rid of comments and attendees and just do attendee count, focus on mongo crud and maybe then authentication
 
-gameEventSchema.pre('find', function(next) {
+gameEventSchema.pre('find', function (next) {
     this.populate('user');
     next();
 });
 
-gameEventSchema.pre('findOne', function(next) {
+gameEventSchema.pre('findOne', function (next) {
     this.populate('user');
     next();
 });
@@ -42,18 +59,18 @@ gameEventSchema.pre('findOne', function(next) {
 //    next();
 //};
 
-gameEventSchema.virtual('userName').get(function(){
+gameEventSchema.virtual('userName').get(function () {
     return `${this.user.firstName} ${this.user.lastName}`.trim();
 });
 
-gameEventSchema.virtual('address').get(function(){
+gameEventSchema.virtual('address').get(function () {
     return `${this.location.street}, ${this.location.city}, ${this.location.state} ${this.location.zipCode}`.trim();
 });
 
-gameEventSchema.methods.serialize = function(){
+gameEventSchema.methods.serialize = function () {
     return {
         id: this._id,
-        host: this.userName, 
+        host: this.userName,
         gameTitle: this.gameTitle,
         maxPlayers: this.maxPlayers,
         gameDate: this.gameDate,
@@ -77,4 +94,6 @@ const GameEvent = mongoose.model('GameEvent', gameEventSchema);
         else console.log(gameEvent.user.firstName, gameEvent.user.lastName);
 });*/
 
-module.exports = {GameEvent};
+module.exports = {
+    GameEvent
+};

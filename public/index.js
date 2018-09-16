@@ -11,12 +11,10 @@ function getGameEvents(callbackFn) {
     //    callbackFn(MOCK_GAME_EVENTS)
     //}, 1);
 
-    //$.getJSON('api/gameEvents', function(data){console.log(data);});//callbackFn);
-    //$.getJSON('api/gameEvents', callbackFn);
+    //$.getJSON('/api/gameEvents', function(data){
+    //  callbackFn(data);
+    // });
 
-
-    //var mock = "arrg"; //JSON.stringify({"name2": "arrg"});
-    //$("#viewGames").on('click', function () {
     $.ajax({
         type: 'GET',
         url: '/api/gameEvents',
@@ -29,6 +27,7 @@ function getGameEvents(callbackFn) {
             console.error(err);
         }
     });
+
     // });
 
 
@@ -44,17 +43,6 @@ function getGameEvents(callbackFn) {
           });
       });*/
 
-    //POST GAME EVENTS
-    // $('#createBtn').on('click', function () {
-    //     alert("clicked create");
-    /*$.ajax({
-        type: 'POST',
-        url: '/api/gameEvents/',
-        success: function(data){
-            //do something with data via front nd
-            location.reload();
-        }
-    });*/
     // });
 
 }
@@ -103,14 +91,14 @@ function displayGameEvents(data) {
         $('.cards').append(`
             <button class="accordion">
                 ${this.gameTitle}<br/>
-                ${dateString}   
-               
+                ${dateString} 
             </button>
             <div class="panel">
               <p>HOST: ${this.host}</p>
-              <p>DESCRIPTION: ${this.content}</p>
+              <p>DESCRIPTION: ${this.gameInfo}</p>
               <p>MAX PLAYERS: ${this.maxPlayers}</p>
-              
+              <p>LOCATION: ${this.address}</p>
+              <p>TIME: ${this.gameTime}</p>
             </div>
         `)
     });
@@ -126,7 +114,6 @@ function displayGameEvents(data) {
 // this function can stay the same even when we
 // are connecting to real API
 function getAndDisplayGameEvents() {
-    console.log("get display");
     getGameEvents(displayGameEvents);
 }
 
@@ -149,8 +136,62 @@ function makeCollapsible() {
 };
 
 
+
+function addNewGameEvent() {
+    $('#js-create-form').on('submit', function (event) {
+        console.log('added');
+
+        const gameTitle = $("#gameTitle").val();
+        //const gameTitle = $gameTitle;
+        const maxPlayers = $("#maxPlayers").val();
+        const host = $("#userName").val();
+        const street = $("#street").val();
+        const city = $("#city").val();
+        const state = $("#state").val();
+        const zipCode = $("#zipCode").val();
+        const gameInfo = $("#gameInfo").val();
+        const gameDate = $("#gameDate").val();
+        const gameTime = $("#gameTime").val();
+
+        const newGame = {
+            gameTitle: gameTitle,
+            maxPlayers: maxPlayers,
+            host: host,
+            street: street,
+            city: city,
+            state: state,
+            zipCode: zipCode,
+            gameInfo: gameInfo,
+            gameDate: gameDate,
+            gameTime: gameTime
+        };
+        console.log(newGame);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/gameEvents/',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(newGame),
+            success: handleAdded,
+            error: err => {
+                alert('Internal Server Error (see console)');
+                console.error(err);
+            }
+        });
+
+        event.preventDefault();
+    })
+}
+
+function handleAdded() {
+    console.log("post success");
+}
+
+
+
 //  on page load do this
 $(function () {
-    //$.getJSON('api/get', getAndDisplayGameEvents(););
     getAndDisplayGameEvents();
+    addNewGameEvent();
 })

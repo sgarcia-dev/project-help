@@ -32,39 +32,40 @@ router.get('/', (req, res) => { //'/', jwtAuth, (re
         })
 });
 
-router.get('/:id', jwtAuth, (req, res) => {
-    if (req.user) {
-        if (!(GameEvent.findById(req.params.id))) {
-            return res.status.send(204);
-        } else {
-            GameEvent.findById(req.params.id)
-                .then(gameEvent => { //if doesnt exist return 404
-                    res.json({
-                        id: gameEvent._id,
-                        host: gameEvent.user,
-                        gameTitle: gameEvent.gameTitle,
-                        maxPlayers: gameEvent.maxPlayers,
-                        gameDate: gameEvent.gameDate,
-                        gameTime: gameEvent.gameTime,
-                        address: gameEvent.address,
-                        //comments: gameEvent.comments,
-                        attendees: gameEvent.attendees,
-                        publishedAt: gameEvent.publishedAt
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
-                    res.status(500).json({
-                        error: 'something went terribly wrong'
-                    });
-                })
-        }
+router.get('/:id', (req, res) => {
+    //if (req.user) {
+    if (!(GameEvent.findById(req.params.id))) {
+        return res.status.send(204);
     } else {
-        res.status(400);
-    }
+        GameEvent.findById(req.params.id)
+            .then(gameEvent => { //if doesnt exist return 404
+                res.json({
+                    id: gameEvent._id,
+                    host: gameEvent.user,
+                    gameTitle: gameEvent.gameTitle,
+                    maxPlayers: gameEvent.maxPlayers,
+                    gameDate: gameEvent.gameDate,
+                    gameTime: gameEvent.gameTime,
+                    address: gameEvent.address,
+                    gameInfo: gameEvent.info,
+                    //comments: gameEvent.comments,
+                    attendees: gameEvent.attendees
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({
+                    error: 'something went terribly wrong'
+                });
+            })
+        //}
+        // } else {
+        //     res.status(400);
+        // }
+    };
 });
 
-router.post('/', jwtAuth, (req, res) => {
+router.post('/', (req, res) => {
     const requiredFields = ['gameTitle', 'gameDate', 'maxPlayers', 'gameTime'];
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -73,7 +74,7 @@ router.post('/', jwtAuth, (req, res) => {
             return res.status(400).send(message);
         }
     });
-    console.log(req.user);
+    //console.log(req.user);
 
     //}
     // if (req.user) {
@@ -83,12 +84,13 @@ router.post('/', jwtAuth, (req, res) => {
     // if (user) {
     GameEvent
         .create({
-            host: req.user.id, //req.body.id,//req.user.userName,/
+            //host: req.user.id, //req.body.id,//req.user.userName,/
             gameTitle: req.body.gameTitle,
             maxPlayers: req.body.maxPlayers,
             gameDate: req.body.gameDate,
             gameTime: req.body.gameTime,
             address: req.body.address,
+            gameInfo: req.body.gameInfo,
             //comments: req.body.comments,
             attendees: req.body.attendees,
             publishedAt: req.body.publishedAt
@@ -159,7 +161,7 @@ router.put('/:id', jwtAuth, (req, res) => {
                 address: updatedGameEvent.address,
                 //comments: updatedGameEvent.comments,
                 attendees: updatedGameEvent.attendees,
-                publishedAt: updatedGameEvent.publishedAt
+                gameInfo: updatedGameInfo.gameInfo
             }))
             .catch(err => res.status(500).json({
                 message: err
