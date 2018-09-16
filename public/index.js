@@ -80,10 +80,7 @@ function displayGameEvents(data) {
         //var myDate = new Date();
         //myDate.toLocaleTimeString();
 
-
-
-        //CALCULATE SPOTS LEFT
-
+        //CALCULATE SPOTS LEFT - would like to do in the future
         //var currentPlayerCount = parseInt(this.attendees.length);
         //var maxPlayersCount = parseInt(this.maxPlayers);
         //var playerSpacesLeft = maxPlayersCount - currentPlayerCount;
@@ -103,21 +100,10 @@ function displayGameEvents(data) {
         `)
     });
 
-    //<p>ATTENDEES: ${gameAttendees}</p>
-    //<p>COMMENTS: ${gameComments}</p>
     makeCollapsible();
-
 }
 
-
-
-// this function can stay the same even when we
-// are connecting to real API
-function getAndDisplayGameEvents() {
-    getGameEvents(displayGameEvents);
-}
-
-
+//makes the viewing games expand/collapse to show more info
 function makeCollapsible() {
     var acc = document.getElementsByClassName("accordion");
     var i;
@@ -137,10 +123,17 @@ function makeCollapsible() {
 
 
 
+// this function can stay the same even when we
+// are connecting to real API
+function getAndDisplayGameEvents() {
+    getGameEvents(displayGameEvents);
+}
+
+
+
+
 function addNewGameEvent() {
     $('#js-create-form').on('submit', function (event) {
-        console.log('added');
-
         const gameTitle = $("#gameTitle").val();
         //const gameTitle = $gameTitle;
         const maxPlayers = $("#maxPlayers").val();
@@ -173,25 +166,27 @@ function addNewGameEvent() {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(newGame),
-            success: handleAdded,
+            success: backToDashboard,
             error: err => {
                 alert('Internal Server Error (see console)');
                 console.error(err);
             }
         });
-
         event.preventDefault();
     })
 }
 
-function handleAdded() {
-    console.log("post success");
+function backToDashboard() {
+    window.location.replace('../index.html');
 }
 
 
 
 //  on page load do this
 $(function () {
-    getAndDisplayGameEvents();
-    addNewGameEvent();
+    getAndDisplayGameEvents(); //GET
+    addNewGameEvent(); //POST
+    //deleteGameEvent(); //DELETE
+    //editGameEvent(); //PUT
+
 })
