@@ -1,58 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const passport = require("passport");
-const {GameEvent} = require("./models");
-const {jwtStrategy} = require("../auth");
+const {
+    GameEvent
+} = require("./models");
+const {
+    jwtStrategy
+} = require("../auth");
 const morgan = require('morgan');
 const app = express();
 app.use(morgan('common'));
-const jwtAuth = passport.authenticate("jwt", {session: false});
+const jwtAuth = passport.authenticate("jwt", {
+    session: false
+});
 
 //const jsonParser = bodyParser.json();
 //app.use(bodyParser.urlencoded({ extended: false }));
 
-router.get('/', (req, res) => {//'/', jwtAuth, (re
-    if (req.user) {
-        GameEvent
-            .find(
-                //{host: req.user.id}
-            )
-            .then(gameEvents => {
-                res.json(gameEvents.map(gameEvent => {
-                    return {
-                        id: gameEvent._id,
-                        host: gameEvent.user,
-                        gameTitle: gameEvent.gameTitle,
-                        maxPlayers: gameEvent.maxPlayers,
-                        gameDate: gameEvent.gameDate,
-                        gameTime: gameEvent.gameTime,
-                        address: gameEvent.address,
-                        //comments: gameEvent.comments,
-                        attendees: gameEvent.attendees,
-                        publishedAt: gameEvent.publishedAt
-                    };
-                }));
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({
-                    error: 'something went terribly wrong'
-                });
-            })
-    } else {
-        res.status(400);
-    }
+router.get('/', (req, res) => { //'/', jwtAuth, (re
+    GameEvent
+        .find({})
+        .then(gameEvents => {
+            console.log(gameEvents);
+            res.json(gameEvents);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                error: 'something went terribly wrong'
+            });
+        })
 });
 
 router.get('/:id', jwtAuth, (req, res) => {
     if (req.user) {
-        if (!(GameEvent.findById(req.params.id))){
+        if (!(GameEvent.findById(req.params.id))) {
             return res.status.send(204);
-        }
-        else {
-              GameEvent.findById(req.params.id)
-            .then(gameEvent => {//if doesnt exist return 404
-                res.json({
+        } else {
+            GameEvent.findById(req.params.id)
+                .then(gameEvent => { //if doesnt exist return 404
+                    res.json({
                         id: gameEvent._id,
                         host: gameEvent.user,
                         gameTitle: gameEvent.gameTitle,
@@ -63,15 +50,16 @@ router.get('/:id', jwtAuth, (req, res) => {
                         //comments: gameEvent.comments,
                         attendees: gameEvent.attendees,
                         publishedAt: gameEvent.publishedAt
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({
-                    error: 'something went terribly wrong'
-                });
-            })
-    }} else {
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).json({
+                        error: 'something went terribly wrong'
+                    });
+                })
+        }
+    } else {
         res.status(400);
     }
 });
@@ -87,55 +75,55 @@ router.post('/', jwtAuth, (req, res) => {
     });
     console.log(req.user);
 
-      //}
-   // if (req.user) {
-       // User
-           // .findById(req.body.user_id)
-          //  .then(user => {
-               // if (user) {
-                    GameEvent
-                        .create({
-                            host: req.user.id,//req.body.id,//req.user.userName,/
-                            gameTitle: req.body.gameTitle,
-                            maxPlayers: req.body.maxPlayers,
-                            gameDate: req.body.gameDate,
-                            gameTime: req.body.gameTime,
-                            address: req.body.address,
-                            //comments: req.body.comments,
-                            attendees: req.body.attendees,
-                            publishedAt: req.body.publishedAt
-                        })
-                        .then(gameEvent => res.status(201).json(
-                            gameEvent
-                            /*id: gameEvent.id,
-                            host: gameEvent.host,//`${host.firstName} ${host.lastName}`,
-                            gameTitle: gameEvent.gameTitle,
-                            maxPlayers: gameEvent.maxPlayers,
-                            gameDate: gameEvent.gameDate,
-                            gameTime: gameEvent.gameTime,
-                            address: gameEvent.address,
-                            //comments: gameEvent.comments,
-                            attendees: gameEvent.attendees,
-                            publishedAt: gameEvent.publishedAt*/
-                        ))
-                        .catch(err => {
-                            console.error(err);
-                            res.status(500).json({
-                                error: 'Something went wrong'
-                            });
-                        });
-               // } //else {
-               //    const message = `User not found`;
-               //     console.error(message);
-               //     return res.status(400).send(message);
-               // }
-            //}
-            //.catch(err => {
-           //     console.error(err);
-          //      res.status(500).json({
-          //          error: 'something went horribly awry'
-               // });
-          //  });
+    //}
+    // if (req.user) {
+    // User
+    // .findById(req.body.user_id)
+    //  .then(user => {
+    // if (user) {
+    GameEvent
+        .create({
+            host: req.user.id, //req.body.id,//req.user.userName,/
+            gameTitle: req.body.gameTitle,
+            maxPlayers: req.body.maxPlayers,
+            gameDate: req.body.gameDate,
+            gameTime: req.body.gameTime,
+            address: req.body.address,
+            //comments: req.body.comments,
+            attendees: req.body.attendees,
+            publishedAt: req.body.publishedAt
+        })
+        .then(gameEvent => res.status(201).json(
+            gameEvent
+            /*id: gameEvent.id,
+            host: gameEvent.host,//`${host.firstName} ${host.lastName}`,
+            gameTitle: gameEvent.gameTitle,
+            maxPlayers: gameEvent.maxPlayers,
+            gameDate: gameEvent.gameDate,
+            gameTime: gameEvent.gameTime,
+            address: gameEvent.address,
+            //comments: gameEvent.comments,
+            attendees: gameEvent.attendees,
+            publishedAt: gameEvent.publishedAt*/
+        ))
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                error: 'Something went wrong'
+            });
+        });
+    // } //else {
+    //    const message = `User not found`;
+    //     console.error(message);
+    //     return res.status(400).send(message);
+    // }
+    //}
+    //.catch(err => {
+    //     console.error(err);
+    //      res.status(500).json({
+    //          error: 'something went horribly awry'
+    // });
+    //  });
     //}
 });
 
@@ -182,18 +170,24 @@ router.put('/:id', jwtAuth, (req, res) => {
 
 router.delete('/:id', jwtAuth, (req, res) => {
     if (req.user) {
-    GameEvent
-        .findByIdAndRemove(req.params.id)
-        .then(() => {
-            //console.log(`Deleted event with id \`${req.params.id}\``);
-            res.status(204).json({message: `Deleted event with id \`${req.params.id}\``});
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({error: 'Something went wrong'});
-        });
+        GameEvent
+            .findByIdAndRemove(req.params.id)
+            .then(() => {
+                //console.log(`Deleted event with id \`${req.params.id}\``);
+                res.status(204).json({
+                    message: `Deleted event with id \`${req.params.id}\``
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({
+                    error: 'Something went wrong'
+                });
+            });
     }
 });
 
 
-  module.exports = { router};
+module.exports = {
+    router
+};
