@@ -12,13 +12,13 @@
             "zipCode": "12345"
         },
         "attendees": [{
-                "userName": "sonnyRadosh"
+                "username": "sonnyRadosh"
             },
             {
-                "userName": "andyFaegan"
+                "username": "andyFaegan"
             },
             {
-                "userName": "mikeSmith"
+                "username": "mikeSmith"
             }
         ],
         "comments": [{
@@ -45,16 +45,16 @@
             "zipCode": "12345"
         },
         "attendees": [{
-                "userName": "andyFaegan"
+                "username": "andyFaegan"
             },
             {
-                "userName": "marissaCole"
+                "username": "marissaCole"
             },
             {
-                "userName": "sonnyRadosh"
+                "username": "sonnyRadosh"
             },
             {
-                "userName": "mikeSmith"
+                "username": "mikeSmith"
             }
         ],
         "comments": [{
@@ -81,16 +81,16 @@
             "zipCode": "12345"
         },
         "attendees": [{
-                "userName": "mikeSmith"
+                "username": "mikeSmith"
             },
             {
-                "userName": "marissaCole"
+                "username": "marissaCole"
             },
             {
-                "userName": "andyFaegan"
+                "username": "andyFaegan"
             },
             {
-                "userName": "sonnyRadosh"
+                "username": "sonnyRadosh"
             }
         ],
         "comments": [{

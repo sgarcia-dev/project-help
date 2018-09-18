@@ -36,7 +36,7 @@ function displayGameEvents(data) {
     //console.log(data); ////${data.gameEvents[index].gameTitle}<br/>
     $.each(data, function () {
         //for (index in data.gameEvents) {
-        //console.log(data.gameEvents.index);
+        console.log(data);
         //GET THE DATE AND TIME
         var gameDate1 = parseInt(this.gameDate);
         //var date2 = new Date(myDate);
@@ -117,7 +117,7 @@ function addNewGameEvent() {
     $('#js-create-form').on('submit', function (event) {
         const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
         const maxPlayers = $("#maxPlayers").val();
-        const host = $("#userName").val();
+        const host = $("#username").val();
         const street = $("#street").val();
         const city = $("#city").val();
         const state = $("#state").val();
@@ -161,7 +161,8 @@ function backToDashboard() {
 }
 
 function deleteGameEvent() {
-    $("div").on('click', '#deleteBtn', function (event) {
+    //need to find id first
+    $(".cards").on('click', '#deleteBtn', function (event) {
         console.log('clicked delete btn');
         $.ajax({
             type: 'DELETE',
@@ -183,40 +184,45 @@ function handleDelete() {
 function login() {
     $('#js-login-form').on('submit', function (event) {
         console.log('clicked log');
-        const userName = $("#userName").val();
+        const username = $("#username").val();
         const password = $("#password").val();
 
         const newUser = {
-            userName: userName,
+            username: username,
             password: password
         };
         console.log(newUser);
         event.preventDefault();
-    });
-    /*
+
+
+        //get webtoken and store in memory
+
         $.ajax({
-            type: 'GET',
-            url: '/api/users/:id',
+            type: 'POST',
+            url: '/api/auth/login/',
             contentType: 'application/json',
             dataType: 'json',
-            //data: JSON.stringify(data),
-            success: backToDashboard,
+            data: JSON.stringify(newUser),
+            success: response => {
+                alert("login success");
+            }, /////need to store token first,
             error: err => {
                 alert('Internal Server Error (see console)');
                 console.error(err);
             }
-        });*/
+        });
+    });
 }
 
 function signup() {
     $('#js-signup-form').on('submit', function (event) {
         console.log('clicked signup');
-        const userName = $("#userName").val();
+        const username = $("#username").val();
         const password = $("#password").val();
         //add more stuff later
 
         const newUser = {
-            userName: userName,
+            username: username,
             password: password
         };
         console.log(newUser);
@@ -226,7 +232,7 @@ function signup() {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(newUser),
-            success: backToDashboard,
+            success: goToLogin,
             error: err => {
                 alert('Internal Server Error (see console)');
                 console.error(err);
@@ -234,6 +240,12 @@ function signup() {
         });
         event.preventDefault();
     });
+}
+
+function goToLogin() {
+    alert("User created, please login");
+    //window.location.replace('./login.html');
+    window.open('./login.html', '_self');
 }
 
 

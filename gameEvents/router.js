@@ -19,10 +19,22 @@ const jwtAuth = passport.authenticate("jwt", {
 
 router.get('/', (req, res) => { //'/', jwtAuth, (re
     GameEvent
-        .find({})
+        .find() //({})
+        .populate('user')
         .then(gameEvents => {
-            //console.log(gameEvents);
-            res.json(gameEvents);
+            res.json(gameEvents.map(gameEvent => {
+                return {
+                    id: gameEvent._id,
+                    //host: gameEvent.hostName,
+                    maxPlayers: gameEvent.maxPlayers,
+                    gameTitle: gameEvent.gameTitle,
+                    gameDate: gameEvent.gameDate,
+                    gameTime: gameEvent.gameTime,
+                    address: gameEvent.address,
+                    gameInfo: gameEvent.gameInfo
+                };
+            }));
+            //console.log(gameEvents);//res.json(gameEvents); //how to return serialized version to get address?
         })
         .catch(err => {
             console.error(err);
@@ -41,7 +53,7 @@ router.get('/:id', (req, res) => {
             .then(gameEvent => { //if doesnt exist return 404
                 res.json({
                     id: gameEvent._id,
-                    host: gameEvent.user,
+                    host: gameEvent.hostName,
                     gameTitle: gameEvent.gameTitle,
                     maxPlayers: gameEvent.maxPlayers,
                     gameDate: gameEvent.gameDate,
@@ -49,7 +61,7 @@ router.get('/:id', (req, res) => {
                     address: gameEvent.address,
                     gameInfo: gameEvent.info,
                     //comments: gameEvent.comments,
-                    attendees: gameEvent.attendees
+                    //attendees: gameEvent.attendees
                 });
             })
             .catch(err => {
@@ -84,7 +96,7 @@ router.post('/', (req, res) => {
     // if (user) {
     GameEvent
         .create({
-            //host: req.user.id, //req.body.id,//req.user.userName,/
+            //host: req.user.id, //req.body.id,//req.user.username,/
             gameTitle: req.body.gameTitle,
             maxPlayers: req.body.maxPlayers,
             gameDate: req.body.gameDate,

@@ -16,7 +16,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Auth endpoints', function () {
-  const userName = 'exampleUser';
+  const username = 'exampleUser';
   const password = 'examplePass';
   const firstName = 'Example';
   const lastName = 'User';
@@ -32,7 +32,7 @@ describe('Auth endpoints', function () {
   beforeEach(function() {
     return User.hashPassword(password).then(password =>
       User.create({
-        userName,
+        username,
         password,
         firstName,
         lastName
@@ -61,11 +61,11 @@ describe('Auth endpoints', function () {
           expect(res).to.have.status(400);
         });
     });
-    it('Should reject requests with incorrect userNames', function () {
+    it('Should reject requests with incorrect usernames', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
-        .send({ userName: 'wronguserName', password })        
+        .send({ username: 'wrongusername', password })        
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
         )
@@ -82,7 +82,7 @@ describe('Auth endpoints', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
-        .send({ userName, password: 'wrongPassword' })
+        .send({ username, password: 'wrongPassword' })
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
         )
@@ -99,7 +99,7 @@ describe('Auth endpoints', function () {
       return chai
         .request(app)
         .post('/api/auth/login')
-        .send({ userName, password })
+        .send({ username, password })
         .then(res => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object');
@@ -109,7 +109,7 @@ describe('Auth endpoints', function () {
             algorithm: ['HS256']
           });
           expect(payload.user).to.deep.equal({
-            userName,
+            username,
             firstName,
             lastName
           });
@@ -137,7 +137,7 @@ describe('Auth endpoints', function () {
     it('Should reject requests with an invalid token', function () {
       const token = jwt.sign(
         {
-          userName,
+          username,
           firstName,
           lastName
         },
@@ -168,7 +168,7 @@ describe('Auth endpoints', function () {
       const token = jwt.sign(
         {
           user: {
-            userName,
+            username,
             firstName,
             lastName
           },
@@ -177,7 +177,7 @@ describe('Auth endpoints', function () {
         JWT_SECRET,
         {
           algorithm: 'HS256',
-          subject: userName
+          subject: username
         }
       );
 
@@ -201,7 +201,7 @@ describe('Auth endpoints', function () {
       const token = jwt.sign(
         {
           user: {
-            userName,
+            username,
             firstName,
             lastName
           }
@@ -209,7 +209,7 @@ describe('Auth endpoints', function () {
         JWT_SECRET,
         {
           algorithm: 'HS256',
-          subject: userName,
+          subject: username,
           expiresIn: '7d'
         }
       );
@@ -228,7 +228,7 @@ describe('Auth endpoints', function () {
             algorithm: ['HS256']
           });
           expect(payload.user).to.deep.equal({
-            userName,
+            username,
             firstName,
             lastName
           });

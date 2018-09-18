@@ -11,7 +11,7 @@
         "zipCode": "12345"
     },
     "attendees": [{
-            "userName": "artyJones"
+            "username": "artyJones"
         }]
 } {
         "id": 3,
@@ -27,16 +27,16 @@
             "zipCode": "12345"
         },
         "attendees": [{
-                "userName": "mikeSmith"
+                "username": "mikeSmith"
             },
             {
-                "userName": "marissaCole"
+                "username": "marissaCole"
             },
             {
-                "userName": "andyFaegan"
+                "username": "andyFaegan"
             },
             {
-                "userName": "sonnyRadosh"
+                "username": "sonnyRadosh"
             }
         ],
         "comments": [{

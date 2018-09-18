@@ -1,21 +1,24 @@
-
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-family: 'Josefin Sans', sans-serif;
-    line-height: 1.3em;
-    letter-spacing: .5px;
-    
-    width: 50vw;
-    margin: 0 auto;
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
+  line-height: 1.3em;
+  letter-spacing: .5px;
+
+  width: 50vw;
+  margin: 0 auto;
 }
-.sourcecodepro {font-family: 'Source Code Pro', monospace;}
+
+.sourcecodepro {
+  font-family: 'Source Code Pro', monospace;
+}
+
 lh {
-    font-weight: bolder;
+  font-weight: bolder;
 }
 
 li {
-    list-style-type: none;
-    font-size: 90%;
+  list-style-type: none;
+  font-size: 90%;
 }
 
 .logo {
@@ -39,7 +42,8 @@ li {
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
+.active,
+.accordion:hover {
   background-color: #ccc;
 }
 
@@ -51,4 +55,27 @@ li {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
+}
+
+
+.dashButton {
+  text-transform: uppercase;
+  font-family: 'Josefin Sans', sans-serif;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 18px;
+  line-height: 130%;
+  margin: 4px 2px;
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+
+.orange {
+  background-color: #FF7724;
+}
+
+.blue {
+  background-color: #00AFB2;
 }

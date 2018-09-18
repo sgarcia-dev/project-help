@@ -9,9 +9,9 @@ var commentSchema = new mongoose.Schema({
 const gameEventSchema = new mongoose.Schema({
     //host:      { type: String, required: true },
     host: {
-        //type: mongoose.Schema.Types.ObjectId,
-        type: String,
-        ref: 'user'
+        type: mongoose.Schema.Types.ObjectId,
+        //type: String,
+        ref: 'User'
     },
     gameTitle: {
         type: String,
@@ -56,12 +56,12 @@ gameEventSchema.pre('findOne', function (next) {
 });
 
 //gameEventSchema.post('find', user) {
-//    this.populate('host', userName);
-//    next();
+//   this.populate('host', username);
+// next();
 //};
 
-gameEventSchema.virtual('userName').get(function () {
-    return `${this.user.firstName} ${this.user.lastName}`.trim();
+gameEventSchema.virtual('hostName').get(function () {
+    return `${this.user.username}`.trim();
 });
 
 gameEventSchema.virtual('address').get(function () {
@@ -71,15 +71,16 @@ gameEventSchema.virtual('address').get(function () {
 gameEventSchema.methods.serialize = function () {
     return {
         id: this._id,
-        host: this.userName,
+        host: this.hostName,
         gameTitle: this.gameTitle,
         maxPlayers: this.maxPlayers,
         gameDate: this.gameDate,
         gameTime: this.gameTime,
         address: this.address,
-        comments: this.comments,
-        attendees: this.attendees,
-        publishedAt: this.publishedAt
+        gameInfo: this.gameInfo
+        //comments: this.comments,
+        //attendees: this.attendees,
+        //publishedAt: this.publishedAt
     };
 }
 

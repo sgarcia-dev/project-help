@@ -1,4 +1,4 @@
-{"_id":{"$oid":"5af50c84c082f1e92f834209"},"firstName":"Mike","lastName":"Smith","userName":"mikeSmith"}
-{"_id":{"$oid":"5af50c84c082f1e92f83420a"},"firstName":"Andy","lastName":"Faegan","userName":"andyFaegan"}
-{"_id":{"$oid":"5af50c84c082f1e92f83420b"},"firstName":"Marissa","lastName":"Cole","userName":"marissaCole"}
-{"_id":{"$oid":"5af50c84c082f1e92f83420c"},"firstName":"Sonny","lastName":"Radosh","userName":"sonnyRadosh"}
+{"_id":{"$oid":"5af50c84c082f1e92f834209"},"firstName":"Mike","lastName":"Smith","username":"mikeSmith"}
+{"_id":{"$oid":"5af50c84c082f1e92f83420a"},"firstName":"Andy","lastName":"Faegan","username":"andyFaegan"}
+{"_id":{"$oid":"5af50c84c082f1e92f83420b"},"firstName":"Marissa","lastName":"Cole","username":"marissaCole"}
+{"_id":{"$oid":"5af50c84c082f1e92f83420c"},"firstName":"Sonny","lastName":"Radosh","username":"sonnyRadosh"}
