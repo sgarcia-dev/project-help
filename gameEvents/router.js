@@ -8,8 +8,9 @@ const {
     jwtStrategy
 } = require("../auth");
 const morgan = require('morgan');
-const app = express();
-app.use(morgan('common'));
+//const router = express();
+router.use(morgan('common'));
+router.use(express.json());
 const jwtAuth = passport.authenticate("jwt", {
     session: false
 });
@@ -183,7 +184,7 @@ router.put('/:id', jwtAuth, (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-    //if (req.user) {
+    // if (req.user) {
     GameEvent
         .findByIdAndRemove(req.params.id)
         .then(() => {
@@ -198,7 +199,7 @@ router.delete('/:id', (req, res) => {
                 error: 'Something went wrong'
             });
         });
-    ///}
+    // }
 });
 
 

@@ -36,7 +36,7 @@ function displayGameEvents(data) {
     //console.log(data); ////${data.gameEvents[index].gameTitle}<br/>
     $.each(data, function () {
         //for (index in data.gameEvents) {
-        console.log(data);
+        //console.log(data);
         //GET THE DATE AND TIME
         var gameDate1 = parseInt(this.gameDate);
         //var date2 = new Date(myDate);
@@ -59,6 +59,7 @@ function displayGameEvents(data) {
 
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
+        <div id="game-summary" data-game-id="${this.id}">
             <button class="accordion">
                 ${this.gameTitle}<br/>
                 ${dateString} 
@@ -74,6 +75,7 @@ function displayGameEvents(data) {
                 <button type="button"  id="deleteBtn">Delete Game</button>
                 </div>
             </div>
+        </div>
         `);
 
         //IF user created game add user buttons
@@ -157,17 +159,24 @@ function addNewGameEvent() {
 }
 
 function backToDashboard() {
-    window.location.replace('../index.html');
+    window.open('../index.html', '_self'); //window.location.replace('../index.html');
 }
 
 function deleteGameEvent() {
     //need to find id first
     $(".cards").on('click', '#deleteBtn', function (event) {
         console.log('clicked delete btn');
+        event.stopImmediatePropagation();
+        const gameID = $(event.currentTarget)
+            .closest('#game-summary').attr('data-game-id');
+
         $.ajax({
             type: 'DELETE',
-            url: '/api/gameEvents/:id',
-            success: handleDelete,
+            url: `/api/gameEvents/${gameID}`, //:id'
+            success: () => {
+                alert("deleted event");
+                window.open('../post/read.html', '_self');
+            },
             error: err => {
                 alert('Internal Server Error (see console)');
                 console.error(err);
@@ -181,9 +190,13 @@ function handleDelete() {
     console.log("deleted");
 }
 
+const myToken = "";
+//console.log(myToken);
+
 function login() {
     $('#js-login-form').on('submit', function (event) {
-        console.log('clicked log');
+        //console.log('clicked log');
+
         const username = $("#username").val();
         const password = $("#password").val();
 
@@ -191,7 +204,7 @@ function login() {
             username: username,
             password: password
         };
-        console.log(newUser);
+        //console.log(newUser);
         event.preventDefault();
 
 
@@ -203,16 +216,49 @@ function login() {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(newUser),
-            success: response => {
-                alert("login success");
-            }, /////need to store token first,
-            error: err => {
-                alert('Internal Server Error (see console)');
-                console.error(err);
+            headers: {
+                "Content-Type": "application/json"
             }
+            //success: response => {
+            //alert("login success");
+            /*success: response => {
+                {
+                    "Authorization",
+                    "Bearer " + localStorage.getItem('authToken')
+                };
+                localStorage.setItem('authToken');
+
+
+                //grab auth token and store it localstorage.set then you can use it with other requests
+
+                //localStorage.setItem('username', username);
+                //console.log("username " + username);
+                //localStorage.setItem('jwtToken', response.authToken);
+                //console.log("authtoken " + authToken);
+                //alert('Login succesful, redirecting ...');
+                window.open('./index.html', '_self');
+            },*/
+            //success: response => {
+            //alert("login success");
+            //}, /////need to store token first?
+
+            //{"Authorization" : "Bearer " + localStorage.getItem('token')}
+            // error: err => {
+            //     alert('Internal Server Error (see console)');
+            //     console.error(err);
+            //  }
+        }).done(token => {
+            localStorage.setItem(`authToken`, token.authToken);
+            localStorage.setItem(`username`, username);
+            console.log("username" + username);
+        }).catch(err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
         });
     });
 }
+
+
 
 function signup() {
     $('#js-signup-form').on('submit', function (event) {
@@ -232,7 +278,10 @@ function signup() {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(newUser),
-            success: goToLogin,
+            callback: user => {
+                alert(`User ${user.username} created. Please login.`) // window.open('./login.html', '_self');
+            },
+            //success: goToLogin,
             error: err => {
                 alert('Internal Server Error (see console)');
                 console.error(err);
@@ -243,7 +292,7 @@ function signup() {
 }
 
 function goToLogin() {
-    alert("User created, please login");
+    alert(`User ${user.username} created, please login`);
     //window.location.replace('./login.html');
     window.open('./login.html', '_self');
 }
