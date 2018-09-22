@@ -1,20 +1,4 @@
-// this function's name and argument can stay the
-// same after we have a live API, but its internal
-// implementation will change. Instead of using a
-// timeout function that returns mock data, it will
-// use jQuery's AJAX functionality to make a call
-// to the server and then run the callbackFn
 function getGameEvents(callbackFn) {
-    // we use a `setTimeout` to make this asynchronous
-    // as it would be with a real AJAX call.
-    //setTimeout(function () {
-    //    callbackFn(MOCK_GAME_EVENTS)
-    //}, 1);
-
-    //$.getJSON('/api/gameEvents', function(data){
-    //  callbackFn(data);
-    // });
-
     $.ajax({
         type: 'GET',
         url: '/api/gameEvents',
@@ -30,13 +14,9 @@ function getGameEvents(callbackFn) {
 
 }
 
-// this function stays the same when we connect
-// to real API later
+
 function displayGameEvents(data) {
-    //console.log(data); ////${data.gameEvents[index].gameTitle}<br/>
-    $.each(data, function () {
-        //for (index in data.gameEvents) {
-        //console.log(data);
+    $.each(data, function () { //for (index in data.gameEvents) {
         //GET THE DATE AND TIME
         var gameDate1 = parseInt(this.gameDate);
         //var date2 = new Date(myDate);
@@ -45,17 +25,7 @@ function displayGameEvents(data) {
         var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
-        //console.log(dateString);
         var timestamp = gameDate2.getTime();
-        //console.log(timestamp);
-        //console.log(date);
-        //var myDate = new Date();
-        //myDate.toLocaleTimeString();
-
-        //CALCULATE SPOTS LEFT - would like to do in the future
-        //var currentPlayerCount = parseInt(this.attendees.length);
-        //var maxPlayersCount = parseInt(this.maxPlayers);
-        //var playerSpacesLeft = maxPlayersCount - currentPlayerCount;
 
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
@@ -108,8 +78,6 @@ function makeCollapsible() {
 
 
 
-// this function can stay the same even when we
-// are connecting to real API
 function getAndDisplayGameEvents() {
     getGameEvents(displayGameEvents);
 }
@@ -186,29 +154,62 @@ function deleteGameEvent() {
     //event.preventDefault();
 }
 
-function handleDelete() {
-    console.log("deleted");
+
+////////////////////////////////
+
+
+let STATE = {
+    isLoggedIn: false
+};
+
+//const store = {
+//    myToken = localStorage.getItem("token") //"";
+//store.authToken = response.authToken;
+//}
+
+function updateAuth() {
+    if (STATE.isLoggedIn) {
+        console.log("logged in");
+        backToDashboard();
+    }
+    console.log("updateauth not in if");
 }
 
-const myToken = "";
-//console.log(myToken);
+
+function checkUserAuth() {
+    STATE.authToken = localStorage.getItem('authToken');
+    if (STATE.authToken) {
+        STATE.isLoggedIn = true;
+        STATE.username = localStorage.getItem('username');
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//refresh
+//store.authToken = localStorage.setItem('authToken', response.authToken);
+
+//The simplest thing to do is to save the token to a variable, similar to your `myToken` variable. But I’d suggest using a `store` or `state` object just so you don’t pollute global.
+//`store.authToken = response.authToken`
+//Then, use that token in all the requests to the API.
+
+//f you refresh the page, then you’ll need to login again. 
+//That’s where localStorage come in. So you can store the token in localStorage like:
+//`store.authToken = localStorage.setItem('authToken', response.authToken)` and then retrieve it from local storage:
+//```headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },```
+//access login with local and that returns the token to use with jwt so send the token for game stuff
 
 function login() {
     $('#js-login-form').on('submit', function (event) {
         //console.log('clicked log');
-
         const username = $("#username").val();
         const password = $("#password").val();
-
         const newUser = {
             username: username,
             password: password
-        };
-        //console.log(newUser);
+        }; //console.log(newUser);
         event.preventDefault();
-
-
-        //get webtoken and store in memory
 
         $.ajax({
             type: 'POST',
@@ -216,47 +217,16 @@ function login() {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify(newUser),
-            headers: {
-                "Content-Type": "application/json"
+            success: res => {
+                localStorage.setItem('authToken', res.authToken);
+                localStorage.setItem('username', res.user.username);
+                console.log('localstorage set');
+                backToDashboard();
             }
-            //success: response => {
-            //alert("login success");
-            /*success: response => {
-                {
-                    "Authorization",
-                    "Bearer " + localStorage.getItem('authToken')
-                };
-                localStorage.setItem('authToken');
-
-
-                //grab auth token and store it localstorage.set then you can use it with other requests
-
-                //localStorage.setItem('username', username);
-                //console.log("username " + username);
-                //localStorage.setItem('jwtToken', response.authToken);
-                //console.log("authtoken " + authToken);
-                //alert('Login succesful, redirecting ...');
-                window.open('./index.html', '_self');
-            },*/
-            //success: response => {
-            //alert("login success");
-            //}, /////need to store token first?
-
-            //{"Authorization" : "Bearer " + localStorage.getItem('token')}
-            // error: err => {
-            //     alert('Internal Server Error (see console)');
-            //     console.error(err);
-            //  }
-        }).done(token => {
-            localStorage.setItem(`authToken`, token.authToken);
-            localStorage.setItem(`username`, username);
-            console.log("username" + username);
-        }).catch(err => {
-            alert('Internal Server Error (see console)');
-            console.error(err);
         });
     });
-}
+};
+
 
 
 
@@ -307,5 +277,6 @@ $(function () {
     //editGameEvent(); //PUT
     login();
     signup();
+    updateAuth();
 
 })
