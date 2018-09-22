@@ -1,15 +1,104 @@
+html {
+  font-size: 16px;
+}
+
+@media screen and (min-width: 320px) {
+  html {
+    font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  html {
+    font-size: 22px;
+  }
+}
+
+
+
 body {
   font-family: 'Montserrat', sans-serif;
   font-family: 'Josefin Sans', sans-serif;
   line-height: 1.3em;
   letter-spacing: .5px;
-
-  width: 50vw;
+  width: 75vw;
   margin: 0 auto;
 }
 
-.sourcecodepro {
+.center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.redColor {
+  color: #E24B3B;
+}
+
+.blueColor {
+  color: #00959C;
+}
+
+.orange {
+  background-color: #FF7724;
+}
+
+.blue {
+  background-color: #00AFB2;
+}
+
+.fontPermMarker {
+  font-family: 'Permanent Marker', cursive;
+  letter-spacing: .3rem;
+  line-height: 2rem;
+  font-size: 200%;
+}
+
+.fontJosefinSans {
+  font-family: 'Josefin Sans', sans-serif;
+  letter-spacing: .1rem;
+  padding-top: 5px;
+}
+
+.fontSrcCodePro {
   font-family: 'Source Code Pro', monospace;
+}
+
+.btnslash {
+  display: inline-block;
+  transform: scale(1, 2);
+  -webkit-transform: scale(1, 2);
+  /* Safari and Chrome */
+  -moz-transform: scale(1, 2);
+  /* Firefox */
+  -ms-transform: scale(1, 1.5);
+  /* IE 9+ */
+  -o-transform: scale(1, 1.5);
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+button:hover {
+  color: #E24B3B;
+  border-color: currentColor;
+}
+
+
+p {
+  font-size: 80%;
 }
 
 lh {
@@ -21,12 +110,6 @@ li {
   font-size: 90%;
 }
 
-.logo {
-  font-family: 'Permanent Marker', cursive;
-  font-family: 'Josefin Sans', sans-serif;
-  letter-spacing: 1.1px;
-  text-align: center;
-}
 
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
@@ -70,12 +153,4 @@ li {
   width: 100px;
   height: 100px;
   display: block;
-}
-
-.orange {
-  background-color: #FF7724;
-}
-
-.blue {
-  background-color: #00AFB2;
 }

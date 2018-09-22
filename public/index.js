@@ -127,7 +127,11 @@ function addNewGameEvent() {
 }
 
 function backToDashboard() {
-    window.open('../index.html', '_self'); //window.location.replace('../index.html');
+    console.log("back to dash");
+    renderDashboard();
+
+
+    //window.open('../index.html', '_self'); //window.location.replace('../index.html');
 }
 
 function deleteGameEvent() {
@@ -171,8 +175,10 @@ function updateAuth() {
     if (STATE.isLoggedIn) {
         console.log("logged in");
         backToDashboard();
+    } else {
+        renderIntro();
+        console.log("not logged in");
     }
-    console.log("updateauth not in if");
 }
 
 
@@ -264,19 +270,145 @@ function signup() {
 function goToLogin() {
     alert(`User ${user.username} created, please login`);
     //window.location.replace('./login.html');
-    window.open('./login.html', '_self');
+    renderLogin();
+
+    //window.open('./login.html', '_self');
 }
 
 
 
 //  on page load do this
 $(function () {
-    getAndDisplayGameEvents(); //GET
-    addNewGameEvent(); //POST
-    deleteGameEvent(); //DELETE
+    //getAndDisplayGameEvents(); //GET
+    //addNewGameEvent(); //POST
+    //deleteGameEvent(); //DELETE
     //editGameEvent(); //PUT
-    login();
-    signup();
-    updateAuth();
+    //login();
+    //signup();
+    //updateAuth();
+    //renderIntro();
+    bindEvents();
 
+    ////
+    //updateAuthenticatedUI();
+    if (STATE) {
+        console.log("true state");
+        renderDashboard();
+    } else(console.log("false state"));
+
+    //if (STATE.authUser) {
+    //  HTTP.getUserNotes({
+    //    jwtToken: STATE.authUser.jwtToken,
+    //  onSuccess: RENDER.renderDashboard
+    //});
+    //}
+    ////
 })
+debugger;
+
+function updateAuthenticatedUI() {
+    const authUser = CACHE.getAuthenticatedUserFromCache();
+    if (authUser) {
+        STATE.authUser = authUser;
+        $('#nav-greeting').html(`Welcome, ${authUser.name}`);
+        $('#auth-menu').removeAttr('hidden');
+    } else {
+        $('#default-menu').removeAttr('hidden');
+    }
+}
+
+
+/////////////////////  RENDERING HTML
+
+
+
+function renderIntro() {
+    let toRender = `
+    <img src="images/img1.svg">
+<h1 class="redColor center fontPermMarker">LET'S ROLL</h1>
+<h3 class="blueColor center fontJosefinSans">TABLETOP SCHEDULER</h3>
+<p>Play more board games (or anything else) with Let's Roll tabletop scheduler! The app is still in
+    production but when complete you will be able to host a game session as well as sign up to attend other
+    users games, add comments, and connect to the board game geek api to grab more info on the games you
+    would like to play.</p>
+<p>
+    <button class="homebuttons" id="loginBtn">LOG IN ></button>
+    &nbsp;&nbsp;<span class="blueColor btnslash">|</span>
+    &nbsp;&nbsp;
+    <button class="homebuttons" id="signupBtn">SIGN UP ></button>
+</p>`;
+    $('#intro').html(toRender);
+}
+
+
+
+function renderLogin() {
+    let toRender = `
+    <h1>Log In</h1>
+        <form id="js-login-form" role="login">
+            <fieldset>
+                <legend>Log In</legend>
+                <label for="username">User Name</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username here" required><br />
+                <label for="password">Password</label>
+                <input type="text" id="password" name="password" placeholder="Enter your password here" required><br />
+                <button type="submit" id="logInBtn" class="button">Log In</button>
+            </fieldset>
+        </form>
+        <p><a id="signupBtn" href="#">Or Sign Up Here</a></p>
+    `;
+    $('#main').html(toRender);
+}
+
+
+
+function renderSignup() {
+    let toRender = `
+    <h1>Sign Up</h1>
+        <form id="js-signup-form" role="signup">
+            <fieldset>
+                <legend>Sign Up</legend>
+                <label for="userName">User Name</label>
+                <input type="text" id="userName" name="userName" placeholder="Enter your username here" required><br />
+                <label for="password">Password</label>
+                <input type="text" id="password" name="password" placeholder="Enter your password here" required><br />
+                <button type="submit" id="submitSignUpUserBtn" class="button">Sign Up ></button>
+            </fieldset>
+        </form>
+        <p><a id="loginBtn" href="#">Or Log in Here</a></p>
+    `;
+    $('#main').html(toRender);
+}
+
+function renderDashboard() {
+    let toRender = `
+    <h1>Welcome!</h1>
+        <!--<form id="goToLogin"><input type ="submit" name="submit" id="submit" value="Log In"></input></form>-->
+        <!--<button id="read">view games</button>-->
+        <a href="/post/read.html">
+            <button id="viewGames" class="dashButton orange">
+                <!--id="read"<p id="listGames">games</p>-->
+                View Games ></button>
+        </a>
+        <a href="/post/create.html">
+            <button id="create" class="dashButton blue">
+                Host a Game >
+            </button></a>
+    `;
+    $('#main').html(toRender);
+}
+
+
+//////////////////////// BIND EVENTS
+function bindEvents() {
+    $('#main').on('click', '#loginBtn', (event) => {
+        //event.preventDefault();
+        renderLogin();
+    });
+    $('#main').on('click', '#signupBtn', (event) => {
+        renderSignup();
+    });
+    //$('#js-signup-form').on('c')
+    //$('#js-signup-form').on('submit',
+
+}
