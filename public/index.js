@@ -163,7 +163,7 @@ function deleteGameEvent() {
 
 
 let STATE = {
-    isLoggedIn: false
+    //isLoggedIn: false
 };
 
 //const store = {
@@ -171,6 +171,7 @@ let STATE = {
 //store.authToken = response.authToken;
 //}
 
+/*
 function updateAuth() {
     if (STATE.isLoggedIn) {
         console.log("logged in");
@@ -179,9 +180,41 @@ function updateAuth() {
         renderIntro();
         console.log("not logged in");
     }
+}*/
+
+function updateAuthenticatedUI() {
+    const authUser = getAuthenticatedUserFromCache();
+
+    if (authUser) {
+        console.log('auth');
+        STATE.authUser = authUser;
+        console.log("hello " + authUser.user);
+        //$('#nav-greeting').html(`Welcome, ${authUser.name}`);
+        //$('#auth-menu').removeAttr('hidden');
+    } else {
+        console.log('no auth');
+        //$('#default-menu').removeAttr('hidden');
+    }
 }
 
 
+
+function getAuthenticatedUserFromCache() {
+    const authToken = localStorage.getItem('authToken');
+    console.log(authToken);
+    const username = localStorage.getItem('username');
+    console.log(username);
+    if (authToken) {
+        return {
+            authToken,
+            username
+        };
+    } else {
+        return undefined;
+    }
+}
+
+/*
 function checkUserAuth() {
     STATE.authToken = localStorage.getItem('authToken');
     if (STATE.authToken) {
@@ -191,7 +224,45 @@ function checkUserAuth() {
     } else {
         return false;
     }
-}
+}*/
+
+
+
+//  on page load do this
+$(function () {
+    //getAndDisplayGameEvents(); //GET
+    //addNewGameEvent(); //POST
+    //deleteGameEvent(); //DELETE
+    //editGameEvent(); //PUT
+    //login();
+    //signup();
+    //updateAuth();
+    //renderIntro();
+
+    updateAuthenticatedUI();
+    bindEvents();
+    ////
+    console.log('doc ready');
+
+    if (STATE.authUser) {
+        console.log("logged in " + STATE);
+        renderDashboard();
+    } else {
+        console.log("not logged in " + STATE);
+        renderIntro();
+    };
+
+});
+
+
+debugger;
+
+
+
+
+
+
+
 
 //refresh
 //store.authToken = localStorage.setItem('authToken', response.authToken);
@@ -224,10 +295,14 @@ function login() {
             dataType: 'json',
             data: JSON.stringify(newUser),
             success: res => {
+                //const authenticatedUser = res.user;
+                //authenticatedUser.authToken = res.authToken;
+                //saveAuthenticatedUser(authToken);
                 localStorage.setItem('authToken', res.authToken);
-                localStorage.setItem('username', res.user.username);
+                localStorage.setItem('username', user.username);
                 console.log('localstorage set');
-                backToDashboard();
+                //backToDashboard();
+                renderDashboard();
             }
         });
     });
@@ -275,50 +350,16 @@ function goToLogin() {
     //window.open('./login.html', '_self');
 }
 
-
-
-//  on page load do this
-$(function () {
-    //getAndDisplayGameEvents(); //GET
-    //addNewGameEvent(); //POST
-    //deleteGameEvent(); //DELETE
-    //editGameEvent(); //PUT
-    //login();
-    //signup();
-    //updateAuth();
+function logout() {
+    //CACHE.deleteAuthenticatedUserFromCache();
+    console.log('authToken' + localStorage.getItem('authToken'));
+    localStorage.removeItem('authToken'); //, res.authToken);
+    localStorage.removeItem('username'); //, res.user.username);
+    console.log('authToken' + localStorage.getItem('authToken'));
+    //STATE = false;
     //renderIntro();
-    bindEvents();
-
-    ////
-    //updateAuthenticatedUI();
-    if (STATE) {
-        console.log("true state");
-        renderDashboard();
-    } else {
-        console.log("false state");
-        renderIntro();
-    };
-
-    //if (STATE.authUser) {
-    //  HTTP.getUserNotes({
-    //    jwtToken: STATE.authUser.jwtToken,
-    //  onSuccess: RENDER.renderDashboard
-    //});
-    //}
-    ////
-})
-debugger;
-
-function updateAuthenticatedUI() {
-    const authUser = CACHE.getAuthenticatedUserFromCache();
-    if (authUser) {
-        STATE.authUser = authUser;
-        $('#nav-greeting').html(`Welcome, ${authUser.name}`);
-        $('#auth-menu').removeAttr('hidden');
-    } else {
-        $('#default-menu').removeAttr('hidden');
-    }
 }
+
 
 
 
@@ -333,18 +374,21 @@ function bindEvents() {
         renderSignup();
     });
     $('#main').on('click', '#viewGamesBtn', (event) => {
-        //console.log("clicked view games");
+        getAndDisplayGameEvents();
         renderViewGames();
     });
     $('#main').on('click', '#hostAGameBtn', (event) => {
-        //console.log("clicked view games");
         renderHostAGame();
     });
     $('#main').on('click', '#renderDashboardBtn', (event) => {
         renderDashboard();
-    })
-
-    //$('#js-signup-form').on('c')
-    //$('#js-signup-form').on('submit',
-
+    });
+    $('#main').on('click', '#logoutBtn', (event) => {
+        logout();
+        renderIntro();
+    });
+    $('#nav').on('click', '#logoutBtn', (event) => {
+        logout();
+        renderIntro();
+    });
 }

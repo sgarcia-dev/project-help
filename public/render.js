@@ -104,7 +104,7 @@ function renderViewGames() {
 function renderHostAGame() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
-    <nav role="navigation"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
+    <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
     <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
     </nav>
         <h1>Create Your Game</h1>
