@@ -11,9 +11,27 @@ function getGameEvents(callbackFn) {
             console.error(err);
         }
     });
-
 }
 
+function getGameEvent(callbackFn) {
+    $.ajax({
+        type: 'GET',
+        url: '/api/gameEvents/:id',
+        contentType: 'application/json',
+        dataType: 'json',
+        //data: JSON.stringify(data),
+        success: displayGameEvent,
+        error: err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
+        }
+    });
+}
+
+function displayGameEvent(data) {
+    console.log(data);
+    //let varrr = {this.gameTitle};
+}
 
 function displayGameEvents(data) {
     $.each(data, function () { //for (index in data.gameEvents) {
@@ -83,6 +101,10 @@ function makeCollapsible() {
 
 function getAndDisplayGameEvents() {
     getGameEvents(displayGameEvents);
+}
+
+function getAndDisplayGameEvent() {
+    getGameEvent(displayGameEvent);
 }
 
 
@@ -161,46 +183,26 @@ function deleteGameEvent() {
 }
 
 
-////////////////////////////////
-
-
-
-
 //const store = {
 //    myToken = localStorage.getItem("token") //"";
 //store.authToken = response.authToken;
 //}
 
-/*
-function updateAuth() {
-    if (STATE.isLoggedIn) {
-        console.log("logged in");
-        backToDashboard();
-    } else {
-        renderIntro();
-        console.log("not logged in");
-    }
-}*/
 
 let STATE = {
-    //isLoggedIn: false
+    isLoggedIn: false
 };
 
 function updateAuthenticatedUI() {
     const authUser = getAuthenticatedUserFromCache();
-
     if (authUser) {
-        console.log('auth');
         STATE.authUser = authUser;
-        console.log("hello " + authUser.user);
-        //$('#nav-greeting').html(`Welcome, ${authUser.name}`);
-        //$('#auth-menu').removeAttr('hidden');
+        console.log("state " + STATE.isLoggedIn);
     } else {
         console.log('no auth');
         //$('#default-menu').removeAttr('hidden');
     }
 }
-
 
 
 function getAuthenticatedUserFromCache() {
@@ -218,35 +220,12 @@ function getAuthenticatedUserFromCache() {
     }
 }
 
-/*
-function checkUserAuth() {
-    STATE.authToken = localStorage.getItem('authToken');
-    if (STATE.authToken) {
-        STATE.isLoggedIn = true;
-        STATE.username = localStorage.getItem('username');
-        return true;
-    } else {
-        return false;
-    }
-}*/
-
-
 
 //  on page load do this
 $(function () {
-    //getAndDisplayGameEvents(); //GET
-    //addNewGameEvent(); //POST
-    //deleteGameEvent(); //DELETE
-    //editGameEvent(); //PUT
-    //login();
-    //signup();
-    //updateAuth();
-    //renderIntro();
 
     updateAuthenticatedUI();
     bindEvents();
-    ////
-    console.log('doc ready');
 
     if (STATE.authUser) {
         console.log("logged in " + STATE);
@@ -295,15 +274,11 @@ function login() {
         dataType: 'json',
         data: JSON.stringify(newUser),
         success: res => {
-            //const authenticatedUser = res.user;
-            //authenticatedUser.authToken = res.authToken;
-            //saveAuthenticatedUser(authToken);
-            //localStorage.setItem('jwtToken', res.authToken);
             localStorage.setItem('authToken', res.authToken);
             localStorage.setItem('username', newUser.username);
             console.log('setitem ' + newUser.username)
             console.log('localstorage set');
-            //backToDashboard();
+            STATE.isLoggedIn = true;
             renderDashboard();
         }
     });
@@ -312,14 +287,12 @@ function login() {
 
 function logout() {
     console.log("logout clicked");
-    //console.log('authToken' + localStorage.getItem('authToken'));
     localStorage.removeItem('authToken'); //, res.authToken);
     localStorage.removeItem('username'); //, res.user.username);
-    //console.log('authToken' + localStorage.getItem('authToken'));
-    //STATE = false;
+    STATE.isLoggedIn = false;
+    console.log(STATE.isLoggedIn);
     renderIntro();
 }
-
 
 
 
@@ -328,13 +301,11 @@ function signup() {
     console.log('clicked signup');
     const username = $("#username").val();
     const password = $("#password").val();
-    //add more stuff later
-
+    //add more stuff later maybe
     const newUser = {
         username: username,
         password: password
     };
-    console.log(newUser);
     $.ajax({
         type: 'POST',
         url: '/api/users/',
@@ -356,9 +327,7 @@ function signup() {
 
 function goToLogin() {
     alert(`User ${user.username} created, please login`);
-    //window.location.replace('./login.html');
     renderLogin();
-
     //window.open('./login.html', '_self');
 }
 
@@ -402,7 +371,9 @@ function bindEvents() {
         renderIntro();
     });
     $('#main').on('click', '#editGameBtn', (event) => {
-        renderEditGame();
+        getAndDisplayGameEvent();
+        //getGameEvent();
+        //renderEditGame();
     });
     $('#main').on('click', '#deleteGameBtn', (event) => {
         console.log('clicked delete');

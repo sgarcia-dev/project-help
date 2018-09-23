@@ -54,15 +54,12 @@ router.get('/:id', (req, res) => {
             .then(gameEvent => { //if doesnt exist return 404
                 res.json({
                     id: gameEvent._id,
-                    host: gameEvent.hostName,
-                    gameTitle: gameEvent.gameTitle,
                     maxPlayers: gameEvent.maxPlayers,
+                    gameTitle: gameEvent.gameTitle,
                     gameDate: gameEvent.gameDate,
                     gameTime: gameEvent.gameTime,
                     address: gameEvent.address,
-                    gameInfo: gameEvent.info,
-                    //comments: gameEvent.comments,
-                    //attendees: gameEvent.attendees
+                    gameInfo: gameEvent.gameInfo
                 });
             })
             .catch(err => {
