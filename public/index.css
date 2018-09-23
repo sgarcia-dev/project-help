@@ -75,10 +75,13 @@ body {
   -o-transform: scale(1, 1.5);
 }
 
-img {
+.imgIntro {
   width: 100%;
   height: auto;
 }
+
+
+
 
 
 button {
@@ -100,6 +103,24 @@ button:hover {
 p {
   font-size: 80%;
 }
+
+#dashTop {
+  background-color: black;
+  color: white;
+  font-size: 100%;
+  letter-spacing: auto;
+  padding: 10px;
+  width: 100%;
+}
+
+input {
+  border-bottom: 1px solid #E24B3B;
+  border-left: 3px solid #E24B3B;
+  border-top: 0px;
+  padding: 5px;
+  margin: 5px;
+}
+
 
 lh {
   font-weight: bolder;

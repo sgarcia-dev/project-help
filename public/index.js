@@ -294,7 +294,10 @@ $(function () {
     if (STATE) {
         console.log("true state");
         renderDashboard();
-    } else(console.log("false state"));
+    } else {
+        console.log("false state");
+        renderIntro();
+    };
 
     //if (STATE.authUser) {
     //  HTTP.getUserNotes({
@@ -318,85 +321,6 @@ function updateAuthenticatedUI() {
 }
 
 
-/////////////////////  RENDERING HTML
-
-
-
-function renderIntro() {
-    let toRender = `
-    <img src="images/img1.svg">
-<h1 class="redColor center fontPermMarker">LET'S ROLL</h1>
-<h3 class="blueColor center fontJosefinSans">TABLETOP SCHEDULER</h3>
-<p>Play more board games (or anything else) with Let's Roll tabletop scheduler! The app is still in
-    production but when complete you will be able to host a game session as well as sign up to attend other
-    users games, add comments, and connect to the board game geek api to grab more info on the games you
-    would like to play.</p>
-<p>
-    <button class="homebuttons" id="loginBtn">LOG IN ></button>
-    &nbsp;&nbsp;<span class="blueColor btnslash">|</span>
-    &nbsp;&nbsp;
-    <button class="homebuttons" id="signupBtn">SIGN UP ></button>
-</p>`;
-    $('#intro').html(toRender);
-}
-
-
-
-function renderLogin() {
-    let toRender = `
-    <h1>Log In</h1>
-        <form id="js-login-form" role="login">
-            <fieldset>
-                <legend>Log In</legend>
-                <label for="username">User Name</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username here" required><br />
-                <label for="password">Password</label>
-                <input type="text" id="password" name="password" placeholder="Enter your password here" required><br />
-                <button type="submit" id="logInBtn" class="button">Log In</button>
-            </fieldset>
-        </form>
-        <p><a id="signupBtn" href="#">Or Sign Up Here</a></p>
-    `;
-    $('#main').html(toRender);
-}
-
-
-
-function renderSignup() {
-    let toRender = `
-    <h1>Sign Up</h1>
-        <form id="js-signup-form" role="signup">
-            <fieldset>
-                <legend>Sign Up</legend>
-                <label for="userName">User Name</label>
-                <input type="text" id="userName" name="userName" placeholder="Enter your username here" required><br />
-                <label for="password">Password</label>
-                <input type="text" id="password" name="password" placeholder="Enter your password here" required><br />
-                <button type="submit" id="submitSignUpUserBtn" class="button">Sign Up ></button>
-            </fieldset>
-        </form>
-        <p><a id="loginBtn" href="#">Or Log in Here</a></p>
-    `;
-    $('#main').html(toRender);
-}
-
-function renderDashboard() {
-    let toRender = `
-    <h1>Welcome!</h1>
-        <!--<form id="goToLogin"><input type ="submit" name="submit" id="submit" value="Log In"></input></form>-->
-        <!--<button id="read">view games</button>-->
-        <a href="/post/read.html">
-            <button id="viewGames" class="dashButton orange">
-                <!--id="read"<p id="listGames">games</p>-->
-                View Games ></button>
-        </a>
-        <a href="/post/create.html">
-            <button id="create" class="dashButton blue">
-                Host a Game >
-            </button></a>
-    `;
-    $('#main').html(toRender);
-}
 
 
 //////////////////////// BIND EVENTS
@@ -408,6 +332,18 @@ function bindEvents() {
     $('#main').on('click', '#signupBtn', (event) => {
         renderSignup();
     });
+    $('#main').on('click', '#viewGamesBtn', (event) => {
+        //console.log("clicked view games");
+        renderViewGames();
+    });
+    $('#main').on('click', '#hostAGameBtn', (event) => {
+        //console.log("clicked view games");
+        renderHostAGame();
+    });
+    $('#main').on('click', '#renderDashboardBtn', (event) => {
+        renderDashboard();
+    })
+
     //$('#js-signup-form').on('c')
     //$('#js-signup-form').on('submit',
 
