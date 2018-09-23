@@ -162,9 +162,7 @@ function deleteGameEvent() {
 ////////////////////////////////
 
 
-let STATE = {
-    //isLoggedIn: false
-};
+
 
 //const store = {
 //    myToken = localStorage.getItem("token") //"";
@@ -181,6 +179,10 @@ function updateAuth() {
         console.log("not logged in");
     }
 }*/
+
+let STATE = {
+    //isLoggedIn: false
+};
 
 function updateAuthenticatedUI() {
     const authUser = getAuthenticatedUserFromCache();
@@ -255,14 +257,6 @@ $(function () {
 });
 
 
-debugger;
-
-
-
-
-
-
-
 
 //refresh
 //store.authToken = localStorage.setItem('authToken', response.authToken);
@@ -278,35 +272,51 @@ debugger;
 //access login with local and that returns the token to use with jwt so send the token for game stuff
 
 function login() {
-    $('#js-login-form').on('submit', function (event) {
-        //console.log('clicked log');
-        const username = $("#username").val();
-        const password = $("#password").val();
-        const newUser = {
-            username: username,
-            password: password
-        }; //console.log(newUser);
-        event.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/auth/login/',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(newUser),
-            success: res => {
-                //const authenticatedUser = res.user;
-                //authenticatedUser.authToken = res.authToken;
-                //saveAuthenticatedUser(authToken);
-                localStorage.setItem('authToken', res.authToken);
-                localStorage.setItem('username', user.username);
-                console.log('localstorage set');
-                //backToDashboard();
-                renderDashboard();
-            }
-        });
+    //$('#js-login-form').on('submit', function (event) {
+    //console.log('clicked log');
+    const username = $("#username").val();
+    console.log({
+        username
     });
+    const password = $("#password").val();
+    const newUser = {
+        username: username,
+        password: password
+    }; //console.log(newUser);
+    event.preventDefault();
+    console.log(newUser.username);
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/auth/login/',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(newUser),
+        success: res => {
+            //const authenticatedUser = res.user;
+            //authenticatedUser.authToken = res.authToken;
+            //saveAuthenticatedUser(authToken);
+            //localStorage.setItem('jwtToken', res.authToken);
+            localStorage.setItem('authToken', res.authToken);
+            localStorage.setItem('username', newUser.username);
+            console.log('setitem ' + newUser.username)
+            console.log('localstorage set');
+            //backToDashboard();
+            renderDashboard();
+        }
+    });
+    // });
 };
+
+function logout() {
+    console.log("logout clicked");
+    //console.log('authToken' + localStorage.getItem('authToken'));
+    localStorage.removeItem('authToken'); //, res.authToken);
+    localStorage.removeItem('username'); //, res.user.username);
+    //console.log('authToken' + localStorage.getItem('authToken'));
+    //STATE = false;
+    renderIntro();
+}
 
 
 
@@ -350,15 +360,6 @@ function goToLogin() {
     //window.open('./login.html', '_self');
 }
 
-function logout() {
-    //CACHE.deleteAuthenticatedUserFromCache();
-    console.log('authToken' + localStorage.getItem('authToken'));
-    localStorage.removeItem('authToken'); //, res.authToken);
-    localStorage.removeItem('username'); //, res.user.username);
-    console.log('authToken' + localStorage.getItem('authToken'));
-    //STATE = false;
-    //renderIntro();
-}
 
 
 
@@ -369,7 +370,15 @@ function bindEvents() {
     $('#main').on('click', '#loginBtn', (event) => {
         //event.preventDefault();
         renderLogin();
+        // login();
     });
+    $('#main').on('submit', '#js-login-form', (event) => {
+        event.preventDefault();
+        //renderLogin();
+        login();
+
+    });
+    //js-login-form
     $('#main').on('click', '#signupBtn', (event) => {
         renderSignup();
     });
