@@ -14,6 +14,8 @@ function getGameEvents(callbackFn) {
 }
 
 function getGameEvent(callbackFn) {
+    //data-game-id="${this.id}"
+
     $.ajax({
         type: 'GET',
         url: '/api/gameEvents/:id',
@@ -44,7 +46,6 @@ function displayGameEvents(data) {
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
         var timestamp = gameDate2.getTime();
-
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
         <div id="game-summary" data-game-id="${this.id}">
@@ -65,6 +66,7 @@ function displayGameEvents(data) {
             </div>
         </div>
         `);
+
 
         //IF user created game add user buttons
         //$('#userButtons').append(`
@@ -371,7 +373,9 @@ function bindEvents() {
         renderIntro();
     });
     $('#main').on('click', '#editGameBtn', (event) => {
-        getAndDisplayGameEvent();
+        //getAndDisplayGameEvent();
+        const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
+        console.log(gameEventId);
         //getGameEvent();
         //renderEditGame();
     });
