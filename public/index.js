@@ -41,8 +41,8 @@ function displayGameEvents(data) {
               <p>LOCATION: ${this.address}</p>
               <p>TIME: ${this.gameTime}</p>
               <div id="userButtons">
-                <button type="button" id="editBtn" class="button">Edit Game</button>
-                <button type="button"  id="deleteBtn">Delete Game</button>
+                <button type="button" id="editGameBtn" class="button">Edit Game</button>
+                <button type="button"  id="deleteGameBtn">Delete Game</button>
                 </div>
             </div>
         </div>
@@ -57,6 +57,9 @@ function displayGameEvents(data) {
 
     makeCollapsible();
 }
+
+
+
 
 //makes the viewing games expand/collapse to show more info
 function makeCollapsible() {
@@ -129,7 +132,6 @@ function addNewGameEvent() {
 function backToDashboard() {
     console.log("back to dash");
     renderDashboard();
-
 
     //window.open('../index.html', '_self'); //window.location.replace('../index.html');
 }
@@ -322,34 +324,34 @@ function logout() {
 
 
 function signup() {
-    $('#js-signup-form').on('submit', function (event) {
-        console.log('clicked signup');
-        const username = $("#username").val();
-        const password = $("#password").val();
-        //add more stuff later
+    //$('#js-signup-form').on('submit', function (event) {
+    console.log('clicked signup');
+    const username = $("#username").val();
+    const password = $("#password").val();
+    //add more stuff later
 
-        const newUser = {
-            username: username,
-            password: password
-        };
-        console.log(newUser);
-        $.ajax({
-            type: 'POST',
-            url: '/api/users/',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(newUser),
-            callback: user => {
-                alert(`User ${user.username} created. Please login.`) // window.open('./login.html', '_self');
-            },
-            //success: goToLogin,
-            error: err => {
-                alert('Internal Server Error (see console)');
-                console.error(err);
-            }
-        });
-        event.preventDefault();
+    const newUser = {
+        username: username,
+        password: password
+    };
+    console.log(newUser);
+    $.ajax({
+        type: 'POST',
+        url: '/api/users/',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(newUser),
+        callback: user => {
+            alert(`User ${user.username} created. Please login.`) // window.open('./login.html', '_self');
+        },
+        //success: goToLogin,
+        error: err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
+        }
     });
+    event.preventDefault();
+    // });
 }
 
 function goToLogin() {
@@ -365,21 +367,20 @@ function goToLogin() {
 
 
 
-//////////////////////// BIND EVENTS
 function bindEvents() {
-    $('#main').on('click', '#loginBtn', (event) => {
+    $('#main').on('click', '#goToLoginBtn', (event) => {
         //event.preventDefault();
         renderLogin();
-        // login();
     });
     $('#main').on('submit', '#js-login-form', (event) => {
         event.preventDefault();
-        //renderLogin();
         login();
-
     });
-    //js-login-form
-    $('#main').on('click', '#signupBtn', (event) => {
+    $('#main').on('submit', '#js-signup-form', (event) => {
+        event.preventDefault();
+        signup();
+    });
+    $('#main').on('click', '#goToSignupBtn', (event) => {
         renderSignup();
     });
     $('#main').on('click', '#viewGamesBtn', (event) => {
@@ -399,5 +400,11 @@ function bindEvents() {
     $('#nav').on('click', '#logoutBtn', (event) => {
         logout();
         renderIntro();
+    });
+    $('#main').on('click', '#editGameBtn', (event) => {
+        renderEditGame();
+    });
+    $('#main').on('click', '#deleteGameBtn', (event) => {
+        console.log('clicked delete');
     });
 }

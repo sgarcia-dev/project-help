@@ -11,10 +11,10 @@ function renderIntro() {
     users games, add comments, and connect to the board game geek api to grab more info on the games you
     would like to play.</p>
 <p>
-    <button class="homebuttons" id="loginBtn">LOG IN ></button>
+    <button class="homebuttons" id="goToLoginBtn">LOG IN ></button>
     &nbsp;&nbsp;<span class="blueColor btnslash">|</span>
     &nbsp;&nbsp;
-    <button class="homebuttons" id="signupBtn">SIGN UP ></button>
+    <button class="homebuttons" id="goToSignupBtn">SIGN UP ></button>
 </p>`;
     $('#intro').html(toRender);
 }
@@ -34,7 +34,7 @@ function renderLogin() {
                 <button type="submit" id="logInBtn" class="button">Log In</button>
             </fieldset>
         </form>
-        <p><a id="signupBtn" href="#">Or Sign Up Here</a></p>
+        <p><a id="goToSignupBtn" href="#">Or Sign Up Here</a></p>
     `;
     $('#main').html(toRender);
 }
@@ -54,7 +54,7 @@ function renderSignup() {
                 <button type="submit" id="submitSignUpUserBtn" class="button">Sign Up ></button>
             </fieldset>
         </form>
-        <p><a id="loginBtn" href="#">Or Log in Here</a></p>
+        <p><a id="goToLoginBtn" href="#">Or Log in Here</a></p>
     `;
     $('#main').html(toRender);
 }
@@ -65,15 +65,12 @@ function renderDashboard() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
     <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
-
     <h1>Welcome!</h1>
-    
             <button id="viewGamesBtn" class="dashButton orange">View Games ></button>
             <!-- img tbd -->
        
             <!-- img tbd -->
             <button id="hostAGameBtn" class="dashButton blue">Host a Game ></button>
-
     `;
     $('#main').html(toRender);
 }
@@ -114,6 +111,65 @@ function renderHostAGame() {
 
                 <label for="gameTitle">Game Title</label>
                 <input type="text" id="gameTitle" name="gameTitle" placeholder="Monopoly" required>
+                <label for="maxPlayers">Maximum Players</label>
+                <input type="number" id="maxPlayers" name="maxPlayers" placeholder="6" required>
+                <br />
+
+                <label for="username">Host Name</label>
+                <input type="text" id="username" name="username" placeholder="John Doe" required>
+                <br />
+
+                <label for="street">Street</label>
+                <input type="street" id="street" name="street" placeholder="123 Main St" required>
+                <br />
+
+                <label for="city">City</label>
+                <input type="city" id="city" name="city" placeholder="Phoenix" required>
+
+                <label for="state">State</label>
+                <select id="state" name="state">
+                    <option>AL</option>
+                    <option>AZ</option>
+                    <option>CA</option>
+                </select>
+
+                <label for="zipCode">Zip Code</label>
+                <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" placeholder="55555" required>
+                <br />
+
+
+                <label for="gameDate">Date</label>
+                <input type="date" id="gameDate" name="gameDate" placeholder="" required>
+
+                <label for="gameTime">Time</label>
+                <input type="time" id="gameTime" name="gameTime" placeholder="" required>
+                <br />
+
+                <label for="gameInfo">Additional Info</label>
+                <input type="textarea" id="gameInfo" name="gameInfo" placeholder="Description of event or additional details about what to bring or whether food will be provided">
+                <br />
+
+
+                <button type="submit" id="createBtn" class="button">Create Game</button>
+            </fieldset>
+        </form>
+    `;
+    $('#main').html(toRender);
+}
+
+function renderEditGame() {
+    let toRender = `
+    <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
+    <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
+    <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
+    </nav>
+        <h1>Edit Your Game</h1>
+        <form id="js-create-form" role="create">
+            <fieldset>
+                <legend>Edit Your Game</legend>
+
+                <label for="gameTitle">Game Title</label>
+                <input type="text" id="gameTitle" name="gameTitle" value={this.gameTitle} required>
                 <label for="maxPlayers">Maximum Players</label>
                 <input type="number" id="maxPlayers" name="maxPlayers" placeholder="6" required>
                 <br />
