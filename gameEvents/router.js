@@ -18,49 +18,25 @@ const jwtAuth = passport.authenticate("jwt", {
 //const jsonParser = bodyParser.json();
 //app.use(bodyParser.urlencoded({ extended: false }));
 
-router.get('/', (req, res) => { //'/', jwtAuth, (re
-    GameEvent
-        .find() //({})
-        .populate('user')
-        .then(gameEvents => {
-            res.json(gameEvents.map(gameEvent => {
-                return {
-                    id: gameEvent._id,
-                    //host: gameEvent.hostName,
-                    maxPlayers: gameEvent.maxPlayers,
-                    gameTitle: gameEvent.gameTitle,
-                    gameDate: gameEvent.gameDate,
-                    gameTime: gameEvent.gameTime,
-                    address: gameEvent.address,
-                    gameInfo: gameEvent.gameInfo
-                };
-            }));
-            //console.log(gameEvents);//res.json(gameEvents); //how to return serialized version to get address?
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({
-                error: 'something went terribly wrong'
-            });
-        })
-});
-
-router.get('/:id', (req, res) => {
-    //if (req.user) {
-    if (!(GameEvent.findById(req.params.id))) {
-        return res.status.send(204);
-    } else {
-        GameEvent.findById(req.params.id)
-            .then(gameEvent => { //if doesnt exist return 404
-                res.json({
-                    id: gameEvent._id,
-                    maxPlayers: gameEvent.maxPlayers,
-                    gameTitle: gameEvent.gameTitle,
-                    gameDate: gameEvent.gameDate,
-                    gameTime: gameEvent.gameTime,
-                    address: gameEvent.address,
-                    gameInfo: gameEvent.gameInfo
-                });
+router.get('/', jwtAuth, (req, res) => { //'/', jwtAuth, (re
+    if (req.user) {
+        GameEvent
+            .find() //({})
+            .populate('user')
+            .then(gameEvents => {
+                res.json(gameEvents.map(gameEvent => {
+                    return {
+                        id: gameEvent._id,
+                        //host: gameEvent.hostName,
+                        maxPlayers: gameEvent.maxPlayers,
+                        gameTitle: gameEvent.gameTitle,
+                        gameDate: gameEvent.gameDate,
+                        gameTime: gameEvent.gameTime,
+                        address: gameEvent.address,
+                        gameInfo: gameEvent.gameInfo
+                    };
+                }));
+                //console.log(gameEvents);//res.json(gameEvents); //how to return serialized version to get address?
             })
             .catch(err => {
                 console.error(err);
@@ -68,11 +44,40 @@ router.get('/:id', (req, res) => {
                     error: 'something went terribly wrong'
                 });
             })
-        //}
-        // } else {
-        //     res.status(400);
-        // }
-    };
+    } else {
+        res.status(400);
+    }
+
+});
+
+router.get('/:id', jwtAuth, (req, res) => {
+    if (req.user) {
+        if (!(GameEvent.findById(req.params.id))) {
+            return res.status.send(204);
+        } else {
+            GameEvent.findById(req.params.id)
+                .then(gameEvent => { //if doesnt exist return 404
+                    res.json({
+                        id: gameEvent._id,
+                        maxPlayers: gameEvent.maxPlayers,
+                        gameTitle: gameEvent.gameTitle,
+                        gameDate: gameEvent.gameDate,
+                        gameTime: gameEvent.gameTime,
+                        address: gameEvent.address,
+                        gameInfo: gameEvent.gameInfo
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).json({
+                        error: 'something went terribly wrong'
+                    });
+                })
+        }
+    } else {
+        res.status(400);
+    }
+    //};
 });
 
 router.post('/', (req, res) => {

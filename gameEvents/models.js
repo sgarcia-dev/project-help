@@ -26,7 +26,7 @@ const gameEventSchema = new mongoose.Schema({
         default: Date.now,
     },
     gameTime: {
-        type: String,
+        type: String, //datetime-local
         required: true
     },
     location: {

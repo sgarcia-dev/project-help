@@ -1,3 +1,5 @@
+//const datePicker = require('jquery-datepicker');
+//renderEditGame.use(datePicker);
 /////////////////////  RENDERING HTML
 
 
@@ -16,7 +18,7 @@ function renderIntro() {
     &nbsp;&nbsp;
     <button class="homebuttons" id="goToSignupBtn">SIGN UP ></button>
 </p>`;
-    $('#intro').html(toRender);
+    $('#main').html(toRender);
 }
 
 
@@ -64,7 +66,7 @@ function renderSignup() {
 function renderDashboard() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
-    <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
+    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     <h1>Welcome!</h1>
             <button id="viewGamesBtn" class="dashButton orange">View Games ></button>
             <!-- img tbd -->
@@ -89,7 +91,7 @@ function renderViewGames() {
     <nav role="navigation">
     <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
 
-    <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
+    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>View Games</h1>
         <div class="cards">
@@ -102,7 +104,7 @@ function renderHostAGame() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
     <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
-    <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
+    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Create Your Game</h1>
         <form id="js-create-form" role="create">
@@ -157,11 +159,46 @@ function renderHostAGame() {
     $('#main').html(toRender);
 }
 
-function renderEditGame() {
+function renderEditGame(game) {
+    //debugger;
+    //let currentDate = game.gameDate;
+    //var day = ("0" + currentDate.getDate()).slice(-2);
+    //var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+    //var today = currentDate.getFullYear()+"-"+(month)+"-"+(day) ;
+    //$('#datePicker').val(today);
+    /////////////////////
+    //var gameDate1 = parseInt(this.gameDate);
+    //var gameDate2 = new Date(gameDate1);
+    //var date = gameDate2.getDate();
+    //var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
+    //var year = gameDate2.getFullYear();
+    //var currentDate = game.gameDate;
+    var currentDate = new Date(game.gameDate);
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth();
+    if (month <= 9) {
+        month = 0 + month
+    };
+
+    var day = currentDate.getDate();
+    var dateInput = year + "-" + month + "-" + day;
+    console.log(dateInput);
+    //var dateInput = 20 + year + "-" + month + "-" + date;
+    //    dateInput.toString();
+    //  console.log(dateInput);
+    //  var dateString = date + "-" + (month + 1) + "-" + year;
+    //  var timestamp = gameDate2.getTime();
+    //HH:MM
+    //get first 10 of date time local?
+    //jqueryDatepicker($);
+    //$('#gameDate').datePicker({
+    //    dateFormat: "yy-mm-dd"
+    //});
+
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
     <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
-    <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a> | <a href="#" id="logoutBtn">LOGOUT</a>
+    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Edit Your Game</h1>
         <form id="js-create-form" role="create">
@@ -169,13 +206,13 @@ function renderEditGame() {
                 <legend>Edit Your Game</legend>
 
                 <label for="gameTitle">Game Title</label>
-                <input type="text" id="gameTitle" name="gameTitle" value={this.gameTitle} required>
+                <input type="text" id="gameTitle" name="gameTitle" value="${game.gameTitle}" required>
                 <label for="maxPlayers">Maximum Players</label>
-                <input type="number" id="maxPlayers" name="maxPlayers" placeholder="6" required>
+                <input type="number" id="maxPlayers" name="maxPlayers" value="${game.maxPlayers}" required>
                 <br />
 
                 <label for="username">Host Name</label>
-                <input type="text" id="username" name="username" placeholder="John Doe" required>
+                <input type="text" id="username" name="username" value="${game.host}" required>
                 <br />
 
                 <label for="street">Street</label>
@@ -198,18 +235,18 @@ function renderEditGame() {
 
 
                 <label for="gameDate">Date</label>
-                <input type="date" id="gameDate" name="gameDate" placeholder="" required>
+                <input id="gameDate" type="text" name="gameDate" value="${dateInput}" required>
 
                 <label for="gameTime">Time</label>
-                <input type="time" id="gameTime" name="gameTime" placeholder="" required>
+                <input type="time" id="gameTime" name="gameTime" value="05:00" required>
                 <br />
 
                 <label for="gameInfo">Additional Info</label>
-                <input type="textarea" id="gameInfo" name="gameInfo" placeholder="Description of event or additional details about what to bring or whether food will be provided">
+                <input type="textarea" id="gameInfo" name="gameInfo" value="${game.gameInfo}">
                 <br />
 
 
-                <button type="submit" id="createBtn" class="button">Create Game</button>
+                <button type="submit" id="editBtn" class="button">Edit Game</button>
             </fieldset>
         </form>
     `;

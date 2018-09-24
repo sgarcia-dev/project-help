@@ -13,16 +13,20 @@ function getGameEvents(callbackFn) {
     });
 }
 
-function getGameEvent(callbackFn) {
+function getGameEvent(gameid, callbackFn) {
     //data-game-id="${this.id}"
 
     $.ajax({
+        headers: {
+            // Authorization: `Bearer ${authToken}`
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
         type: 'GET',
-        url: '/api/gameEvents/:id',
+        url: `/api/gameEvents/${gameid}`,
         contentType: 'application/json',
         dataType: 'json',
         //data: JSON.stringify(data),
-        success: displayGameEvent,
+        success: callbackFn,
         error: err => {
             alert('Internal Server Error (see console)');
             console.error(err);
@@ -46,6 +50,12 @@ function displayGameEvents(data) {
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
         var timestamp = gameDate2.getTime();
+
+        ////////////////
+        //Scheduled repair date: 
+        //<b>${moment(data.repairInfo[i].date).format('MMM Do YYYY')}
+
+
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
         <div id="game-summary" data-game-id="${this.id}">
@@ -79,8 +89,6 @@ function displayGameEvents(data) {
 }
 
 
-
-
 //makes the viewing games expand/collapse to show more info
 function makeCollapsible() {
     var acc = document.getElementsByClassName("accordion");
@@ -100,7 +108,6 @@ function makeCollapsible() {
 };
 
 
-
 function getAndDisplayGameEvents() {
     getGameEvents(displayGameEvents);
 }
@@ -111,46 +118,46 @@ function getAndDisplayGameEvent() {
 
 
 function addNewGameEvent() {
-    $('#js-create-form').on('submit', function (event) {
-        const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
-        const maxPlayers = $("#maxPlayers").val();
-        const host = $("#username").val();
-        const street = $("#street").val();
-        const city = $("#city").val();
-        const state = $("#state").val();
-        const zipCode = $("#zipCode").val();
-        const gameInfo = $("#gameInfo").val();
-        const gameDate = $("#gameDate").val();
-        const gameTime = $("#gameTime").val();
+    //$('#js-create-form').on('submit', function (event) {
+    const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
+    const maxPlayers = $("#maxPlayers").val();
+    const host = $("#username").val();
+    const street = $("#street").val();
+    const city = $("#city").val();
+    const state = $("#state").val();
+    const zipCode = $("#zipCode").val();
+    const gameInfo = $("#gameInfo").val();
+    const gameDate = $("#gameDate").val();
+    const gameTime = $("#gameTime").val();
 
-        const newGame = {
-            gameTitle: gameTitle,
-            maxPlayers: maxPlayers,
-            host: host,
-            street: street,
-            city: city,
-            state: state,
-            zipCode: zipCode,
-            gameInfo: gameInfo,
-            gameDate: gameDate,
-            gameTime: gameTime
-        };
-        //console.log(newGame);
+    const newGame = {
+        gameTitle: gameTitle,
+        maxPlayers: maxPlayers,
+        host: host,
+        street: street,
+        city: city,
+        state: state,
+        zipCode: zipCode,
+        gameInfo: gameInfo,
+        gameDate: gameDate,
+        gameTime: gameTime
+    };
+    //console.log(newGame);
 
-        $.ajax({
-            type: 'POST',
-            url: '/api/gameEvents/',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify(newGame),
-            success: backToDashboard,
-            error: err => {
-                alert('Internal Server Error (see console)');
-                console.error(err);
-            }
-        });
-        event.preventDefault();
-    })
+    $.ajax({
+        type: 'POST',
+        url: '/api/gameEvents/',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(newGame),
+        success: backToDashboard,
+        error: err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
+        }
+    });
+    event.preventDefault();
+    //})
 }
 
 function backToDashboard() {
@@ -287,13 +294,13 @@ function login() {
     // });
 };
 
+
 function logout() {
     console.log("logout clicked");
     localStorage.removeItem('authToken'); //, res.authToken);
     localStorage.removeItem('username'); //, res.user.username);
     STATE.isLoggedIn = false;
     console.log(STATE.isLoggedIn);
-    renderIntro();
 }
 
 
@@ -314,6 +321,7 @@ function signup() {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(newUser),
+        //change to success
         callback: user => {
             alert(`User ${user.username} created. Please login.`) // window.open('./login.html', '_self');
         },
@@ -345,6 +353,7 @@ function bindEvents() {
     });
     $('#main').on('submit', '#js-login-form', (event) => {
         event.preventDefault();
+        debugger;
         login();
     });
     $('#main').on('submit', '#js-signup-form', (event) => {
@@ -365,18 +374,17 @@ function bindEvents() {
         renderDashboard();
     });
     $('#main').on('click', '#logoutBtn', (event) => {
+        debugger;
         logout();
         renderIntro();
     });
-    $('#nav').on('click', '#logoutBtn', (event) => {
-        logout();
-        renderIntro();
-    });
+    $('#main').on('submit', '#js-create-form', addNewGameEvent);
+
     $('#main').on('click', '#editGameBtn', (event) => {
         //getAndDisplayGameEvent();
         const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
-        console.log(gameEventId);
-        //getGameEvent();
+        //console.log(gameEventId);
+        getGameEvent(gameEventId, renderEditGame);
         //renderEditGame();
     });
     $('#main').on('click', '#deleteGameBtn', (event) => {
