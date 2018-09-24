@@ -201,7 +201,7 @@ function renderEditGame(game) {
     <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Edit Your Game</h1>
-        <form id="js-create-form" role="create">
+        <form id="js-edit-form" role="create">
             <fieldset>
                 <legend>Edit Your Game</legend>
 
@@ -246,7 +246,7 @@ function renderEditGame(game) {
                 <br />
 
 
-                <button type="submit" id="editBtn" class="button">Edit Game</button>
+                <button type="submit" id="saveEditGameBtn" class="button">Save Game ></button>
             </fieldset>
         </form>
     `;

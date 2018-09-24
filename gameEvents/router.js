@@ -19,7 +19,8 @@ const jwtAuth = passport.authenticate("jwt", {
 //app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', jwtAuth, (req, res) => { //'/', jwtAuth, (re
-    if (req.user) {
+    if (req.user) { //do i need this
+        //console.log("requser " + req.user);
         GameEvent
             .find() //({})
             .populate('user')
@@ -80,7 +81,7 @@ router.get('/:id', jwtAuth, (req, res) => {
     //};
 });
 
-router.post('/', (req, res) => {
+router.post('/', jwtAuth, (req, res) => {
     const requiredFields = ['gameTitle', 'gameDate', 'maxPlayers', 'gameTime'];
     requiredFields.forEach(field => {
         if (!(field in req.body)) {
@@ -89,59 +90,56 @@ router.post('/', (req, res) => {
             return res.status(400).send(message);
         }
     });
-    //console.log(req.user);
 
-    //}
-    // if (req.user) {
-    // User
-    // .findById(req.body.user_id)
-    //  .then(user => {
-    // if (user) {
-    GameEvent
-        .create({
-            //host: req.user.id, //req.body.id,//req.user.username,/
-            gameTitle: req.body.gameTitle,
-            maxPlayers: req.body.maxPlayers,
-            gameDate: req.body.gameDate,
-            gameTime: req.body.gameTime,
-            address: req.body.address,
-            gameInfo: req.body.gameInfo,
-            //comments: req.body.comments,
-            attendees: req.body.attendees,
-            publishedAt: req.body.publishedAt
-        })
-        .then(gameEvent => res.status(201).json(
-            gameEvent
-            /*id: gameEvent.id,
-            host: gameEvent.host,//`${host.firstName} ${host.lastName}`,
-            gameTitle: gameEvent.gameTitle,
-            maxPlayers: gameEvent.maxPlayers,
-            gameDate: gameEvent.gameDate,
-            gameTime: gameEvent.gameTime,
-            address: gameEvent.address,
-            //comments: gameEvent.comments,
-            attendees: gameEvent.attendees,
-            publishedAt: gameEvent.publishedAt*/
-        ))
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({
-                error: 'Something went wrong'
-            });
-        });
-    // } //else {
-    //    const message = `User not found`;
-    //     console.error(message);
-    //     return res.status(400).send(message);
-    // }
-    //}
-    //.catch(err => {
-    //     console.error(err);
-    //      res.status(500).json({
-    //          error: 'something went horribly awry'
-    // });
-    //  });
-    //}
+    if (req.user) {
+        User
+            .findById(req.body.user_id)
+            .then(user => {
+                if (user) {
+                    GameEvent
+                        .create({
+                            //host: req.user.id, //req.body.id,//req.user.username,/
+                            //id: gameEvent._id,
+                            maxPlayers: gameEvent.maxPlayers,
+                            gameTitle: gameEvent.gameTitle,
+                            gameDate: gameEvent.gameDate,
+                            gameTime: gameEvent.gameTime,
+                            address: gameEvent.address,
+                            gameInfo: gameEvent.gameInfo
+                        })
+                        .then(gameEvent => res.status(201).json(
+                            gameEvent
+                            /*id: gameEvent.id,
+                            host: gameEvent.host,//`${host.firstName} ${host.lastName}`,
+                            gameTitle: gameEvent.gameTitle,
+                            maxPlayers: gameEvent.maxPlayers,
+                            gameDate: gameEvent.gameDate,
+                            gameTime: gameEvent.gameTime,
+                            address: gameEvent.address,
+                            //comments: gameEvent.comments,
+                            attendees: gameEvent.attendees,
+                            publishedAt: gameEvent.publishedAt*/
+                        ))
+                        .catch(err => {
+                            console.error(err);
+                            res.status(500).json({
+                                error: 'Something went wrong'
+                            });
+                        });
+                } //else {
+                const message = `User not found`;
+                console.error(message);
+                return res.status(400).send(message);
+            })
+        //.catch(err => {
+        //     console.error(err);
+        //      res.status(500).json({
+        //          error: 'something went horribly awry'
+        // });
+        //  });
+    } else {
+        console.error(err);
+    }
 });
 
 
@@ -168,15 +166,13 @@ router.put('/:id', jwtAuth, (req, res) => {
                 new: true
             })
             .then(updatedGameEvent => res.status(200).json({
-                id: updatedGameEvent.id,
-                gameTitle: updatedGameEvent.gameTitle,
+                id: updatedGameEvent._id,
                 maxPlayers: updatedGameEvent.maxPlayers,
+                gameTitle: updatedGameEvent.gameTitle,
                 gameDate: updatedGameEvent.gameDate,
                 gameTime: updatedGameEvent.gameTime,
                 address: updatedGameEvent.address,
-                //comments: updatedGameEvent.comments,
-                attendees: updatedGameEvent.attendees,
-                gameInfo: updatedGameInfo.gameInfo
+                gameInfo: updatedGameEvent.gameInfo
             }))
             .catch(err => res.status(500).json({
                 message: err
@@ -185,23 +181,23 @@ router.put('/:id', jwtAuth, (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
-    // if (req.user) {
-    GameEvent
-        .findByIdAndRemove(req.params.id)
-        .then(() => {
-            //console.log(`Deleted event with id \`${req.params.id}\``);
-            res.status(204).json({
-                message: `Deleted event with id \`${req.params.id}\``
+router.delete('/:id', jwtAuth, (req, res) => {
+    if (req.user) {
+        GameEvent
+            .findByIdAndRemove(req.params.id)
+            .then(() => {
+                //console.log(`Deleted event with id \`${req.params.id}\``);
+                res.status(204).json({
+                    message: `Deleted event with id \`${req.params.id}\``
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({
+                    error: 'Something went wrong'
+                });
             });
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({
-                error: 'Something went wrong'
-            });
-        });
-    // }
+    }
 });
 
 

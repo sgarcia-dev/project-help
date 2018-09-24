@@ -1,5 +1,8 @@
 function getGameEvents(callbackFn) {
     $.ajax({
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
         type: 'GET',
         url: '/api/gameEvents',
         contentType: 'application/json',
@@ -13,12 +16,58 @@ function getGameEvents(callbackFn) {
     });
 }
 
+
+function saveEditGame(gameID, callbackFn) {
+    const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
+    const maxPlayers = $("#maxPlayers").val();
+    const host = $("#username").val();
+    const street = $("#street").val();
+    const city = $("#city").val();
+    const state = $("#state").val();
+    const zipCode = $("#zipCode").val();
+    const gameInfo = $("#gameInfo").val();
+    const gameDate = $("#gameDate").val();
+    const gameTime = $("#gameTime").val();
+
+    const newGame = {
+        gameTitle: gameTitle,
+        maxPlayers: maxPlayers,
+        host: host,
+        street: street,
+        city: city,
+        state: state,
+        zipCode: zipCode,
+        gameInfo: gameInfo,
+        gameDate: gameDate,
+        gameTime: gameTime
+    };
+    console.log(newGame);
+
+
+    $.ajax({
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
+        type: 'PUT',
+        url: `/api/gameEvents/${gameID}`,
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(newGame),
+        success: callbackFn,
+        error: err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
+        }
+    });
+    event.preventDefault();
+}
+
+
 function getGameEvent(gameid, callbackFn) {
     //data-game-id="${this.id}"
 
     $.ajax({
         headers: {
-            // Authorization: `Bearer ${authToken}`
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         },
         type: 'GET',
@@ -50,11 +99,9 @@ function displayGameEvents(data) {
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
         var timestamp = gameDate2.getTime();
-
         ////////////////
         //Scheduled repair date: 
         //<b>${moment(data.repairInfo[i].date).format('MMM Do YYYY')}
-
 
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
@@ -70,19 +117,17 @@ function displayGameEvents(data) {
               <p>LOCATION: ${this.address}</p>
               <p>TIME: ${this.gameTime}</p>
               <div id="userButtons">
-                <button type="button" id="editGameBtn" class="button">Edit Game</button>
+                <button type="button" id="goToEditGameBtn" class="button">Edit Game</button>
                 <button type="button"  id="deleteGameBtn">Delete Game</button>
                 </div>
             </div>
         </div>
         `);
 
-
         //IF user created game add user buttons
         //$('#userButtons').append(`
         //<button type="submit" id="editBtn" class="button">Edit Game</button>
         //<button type="submit" id="deleteBtn" class="button">Delete Game</button>
-
     });
 
     makeCollapsible();
@@ -110,10 +155,6 @@ function makeCollapsible() {
 
 function getAndDisplayGameEvents() {
     getGameEvents(displayGameEvents);
-}
-
-function getAndDisplayGameEvent() {
-    getGameEvent(displayGameEvent);
 }
 
 
@@ -145,6 +186,9 @@ function addNewGameEvent() {
     //console.log(newGame);
 
     $.ajax({
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
         type: 'POST',
         url: '/api/gameEvents/',
         contentType: 'application/json',
@@ -167,29 +211,37 @@ function backToDashboard() {
     //window.open('../index.html', '_self'); //window.location.replace('../index.html');
 }
 
-function deleteGameEvent() {
+function deleteGameEvent(gameID) {
     //need to find id first
-    $(".cards").on('click', '#deleteBtn', function (event) {
-        console.log('clicked delete btn');
-        event.stopImmediatePropagation();
-        const gameID = $(event.currentTarget)
-            .closest('#game-summary').attr('data-game-id');
+    //$(".cards").on('click', '#deleteBtn', function (event) {
+    //console.log('clicked delete btn');
+    //event.stopImmediatePropagation();
+    //const gameID = $(event.currentTarget)
+    //    .closest('#game-summary').attr('data-game-id');
+    //console.log(gameID);
 
-        $.ajax({
-            type: 'DELETE',
-            url: `/api/gameEvents/${gameID}`, //:id'
-            success: () => {
-                alert("deleted event");
-                window.open('../post/read.html', '_self');
-            },
-            error: err => {
-                alert('Internal Server Error (see console)');
-                console.error(err);
-            }
-        });
+    $.ajax({
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
+        type: 'DELETE',
+        url: `/api/gameEvents/${gameID}`, //:id'
+        success: () => {
+            alert("deleted event");
+            renderViewGames();
+            getAndDisplayGameEvents();
+            //window.open('../post/read.html', '_self');
+        },
+        error: err => {
+            alert('Internal Server Error (see console)');
+            console.error(err);
+        }
     });
+    //});
     //event.preventDefault();
 }
+
+
 
 
 //const store = {
@@ -206,19 +258,18 @@ function updateAuthenticatedUI() {
     const authUser = getAuthenticatedUserFromCache();
     if (authUser) {
         STATE.authUser = authUser;
-        console.log("state " + STATE.isLoggedIn);
-    } else {
-        console.log('no auth');
-        //$('#default-menu').removeAttr('hidden');
+        //console.log("state " + STATE.isLoggedIn);
     }
+    //else {
+    //console.log('no auth');
+    //$('#default-menu').removeAttr('hidden');
+    //}
 }
 
 
 function getAuthenticatedUserFromCache() {
     const authToken = localStorage.getItem('authToken');
-    console.log(authToken);
     const username = localStorage.getItem('username');
-    console.log(username);
     if (authToken) {
         return {
             authToken,
@@ -237,10 +288,10 @@ $(function () {
     bindEvents();
 
     if (STATE.authUser) {
-        console.log("logged in " + STATE);
+        //console.log("logged in " + STATE);
         renderDashboard();
     } else {
-        console.log("not logged in " + STATE);
+        //console.log("not logged in " + STATE);
         renderIntro();
     };
 
@@ -352,42 +403,44 @@ function bindEvents() {
         renderLogin();
     });
     $('#main').on('submit', '#js-login-form', (event) => {
-        event.preventDefault();
-        debugger;
+        //event.preventDefault();
         login();
     });
     $('#main').on('submit', '#js-signup-form', (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         signup();
     });
-    $('#main').on('click', '#goToSignupBtn', (event) => {
-        renderSignup();
-    });
+
+    $('#main').on('click', '#goToSignupBtn', renderSignup);
+
     $('#main').on('click', '#viewGamesBtn', (event) => {
         getAndDisplayGameEvents();
         renderViewGames();
     });
-    $('#main').on('click', '#hostAGameBtn', (event) => {
-        renderHostAGame();
-    });
-    $('#main').on('click', '#renderDashboardBtn', (event) => {
-        renderDashboard();
-    });
+
+    $('#main').on('click', '#hostAGameBtn', renderHostAGame);
+
+    $('#main').on('click', '#renderDashboardBtn', renderDashboard);
+
     $('#main').on('click', '#logoutBtn', (event) => {
-        debugger;
         logout();
         renderIntro();
     });
+
     $('#main').on('submit', '#js-create-form', addNewGameEvent);
 
-    $('#main').on('click', '#editGameBtn', (event) => {
-        //getAndDisplayGameEvent();
+    $('#main').on('click', '#goToEditGameBtn', (event) => {
         const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
-        //console.log(gameEventId);
         getGameEvent(gameEventId, renderEditGame);
-        //renderEditGame();
     });
+
+    $('#main').on('submit', '#js-edit-form', (event) => {
+        const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
+        saveEditGame(gameEventId, backToDashboard);
+    });
+
     $('#main').on('click', '#deleteGameBtn', (event) => {
-        console.log('clicked delete');
+        const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
+        deleteGameEvent(gameEventId);
     });
 }
