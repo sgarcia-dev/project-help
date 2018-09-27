@@ -22,27 +22,17 @@ function saveEditGame(gameID, callbackFn) {
     const maxPlayers = $("#maxPlayers").val();
     //const user = $("#username").val();
     const user = localStorage.getItem("user_id");
-    const street = $("#street").val();
-    const city = $("#city").val();
-    const state = $("#state").val();
-    const zipCode = $("#zipCode").val();
+    const address = $("#address").val();
     const gameInfo = $("#gameInfo").val();
-    const gameDate = $("#gameDate").val();
-    const gameTime = $("#gameTime").val();
+    const gameDatetime = $("#gameDatetime").val();
 
     const newGame = {
         gameTitle: gameTitle,
         maxPlayers: maxPlayers,
         user: user,
-        location: {
-            street: street,
-            city: city,
-            state: state,
-            zipCode: zipCode
-        },
+        address: address,
         gameInfo: gameInfo,
-        gameDate: gameDate,
-        gameTime: gameTime
+        gameDatetime: new Date(gameDatetime).toISOString(),
     };
     console.log('newGameput', newGame);
 
@@ -92,35 +82,22 @@ function displayGameEvent(data) {
     //let varrr = {this.gameTitle};
 }
 
-function displayGameEvents(data) {
-    $.each(data, function () { //for (index in data.gameEvents) {
-        //GET THE DATE AND TIME
-        var gameDate1 = parseInt(this.gameDate);
-        //var date2 = new Date(myDate);
-        var gameDate2 = new Date(gameDate1);
-        var date = gameDate2.getDate();
-        var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
-        var year = gameDate2.getFullYear();
-        var dateString = date + "-" + (month + 1) + "-" + year;
-        var timestamp = gameDate2.getTime();
-
-        ////////////////
-        //Scheduled repair date: 
-        //<b>${moment(data.repairInfo[i].date).format('MMM Do YYYY')}
+function displayGameEvents(gameEvents) {
+    $.each(gameEvents, function (index, gameEvent) {
 
         //IF LOGGED IN AND CREATED EVENT DO THIS
         $('.cards').append(`
-        <div id="game-summary" data-game-id="${this.id}">
+        <div id="game-summary" data-game-id="${gameEvent.id}">
             <button class="accordion">
-                ${this.gameTitle}<br/>
-                ${dateString} 
+                ${gameEvent.gameTitle}<br/>
+                ${new Date(gameEvent.gameDatetime).toLocaleString()} 
             </button>
             <div class="panel">
-              <p>HOST: ${this.user}</p>
-              <p>DESCRIPTION: ${this.gameInfo}</p>
-              <p>MAX PLAYERS: ${this.maxPlayers}</p>
-              <p>LOCATION: ${this.address}</p>
-              <p>TIME: ${this.gameTime}</p>
+              <p>HOST: ${gameEvent.user.username}</p>
+              <p>DESCRIPTION: ${gameEvent.gameInfo}</p>
+              <p>MAX PLAYERS: ${gameEvent.maxPlayers}</p>
+              <p>LOCATION: ${gameEvent.address}</p>
+              <p>TIME: ${new Date(gameEvent.gameDatetime).toLocaleString()}</p>
               <div id="userButtons">
                 <button type="button" id="goToEditGameBtn" class="button">Edit Game</button>
                 <button type="button"  id="deleteGameBtn">Delete Game</button>
@@ -168,29 +145,18 @@ function addNewGameEvent() {
     const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
     const maxPlayers = $("#maxPlayers").val();
     const user = $("#username").val();
-    const street = $("#street").val();
-    const city = $("#city").val();
-    const state = $("#state").val();
-    const zipCode = $("#zipCode").val();
+    const address = $("#address").val();
     const gameInfo = $("#gameInfo").val();
-    const gameDate = $("#gameDate").val();
-    const gameTime = $("#gameTime").val();
-
+    const gameDatetime = $("#gameDatetime").val();
+    debugger;
     const newGame = {
         gameTitle: gameTitle,
         maxPlayers: maxPlayers,
         user: user,
-        location: {
-            street: street,
-            city: city,
-            state: state,
-            zipCode: zipCode
-        },
+        address: address,
         gameInfo: gameInfo,
-        gameDate: gameDate,
-        gameTime: gameTime
+        gameDatetime: new Date(gameDatetime).toISOString()
     };
-    console.log('newGame', newGame);
 
     $.ajax({
         headers: {
@@ -443,7 +409,7 @@ function bindEvents() {
     });
 
     $('#main').on('submit', '#js-edit-form', (event) => {
-        const gameEventId = $(event.currentTarget).closest('#game-summary').attr('data-game-id');
+        const gameEventId = $(event.currentTarget).attr('data-game-id');
         saveEditGame(gameEventId, backToDashboard);
     });
 

@@ -117,35 +117,12 @@ function renderUserAGame() {
                 <input type="number" id="maxPlayers" name="maxPlayers" placeholder="6" required>
                 <br />
 
-             <!--   <label for="username">User Name</label>
-                <input type="text" id="username" name="username" placeholder="John Doe" required>
-                <br />
-            -->
-                <label for="street">Street</label>
-                <input type="street" id="street" name="street" placeholder="123 Main St" required>
+                <label for="address">Address</label>
+                <input type="address" id="address" name="address" placeholder="123 Main St" required>
                 <br />
 
-                <label for="city">City</label>
-                <input type="city" id="city" name="city" placeholder="Phoenix" required>
-
-                <label for="state">State</label>
-                <select id="state" name="state">
-                    <option>AL</option>
-                    <option>AZ</option>
-                    <option>CA</option>
-                </select>
-
-                <label for="zipCode">Zip Code</label>
-                <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" placeholder="55555" required>
-                <br />
-
-
-                <label for="gameDate">Date</label>
-                <input type="date" id="gameDate" name="gameDate" placeholder="" required>
-
-                <label for="gameTime">Time</label>
-                <input type="time" id="gameTime" name="gameTime" placeholder="" required>
-                <br />
+                <label for="gameDatetime">Date & Time</label>
+                <input type="datetime-local" id="gameDatetime" name="gameDatetime" required />
 
                 <label for="gameInfo">Additional Info</label>
                 <input type="textarea" id="gameInfo" name="gameInfo" placeholder="Description of event or additional details about what to bring or whether food will be provided">
@@ -160,40 +137,27 @@ function renderUserAGame() {
 }
 
 function renderEditGame(game) {
-    //debugger;
-    //let currentDate = game.gameDate;
-    //var day = ("0" + currentDate.getDate()).slice(-2);
-    //var month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-    //var today = currentDate.getFullYear()+"-"+(month)+"-"+(day) ;
-    //$('#datePicker').val(today);
-    /////////////////////
-    //var gameDate1 = parseInt(this.gameDate);
-    //var gameDate2 = new Date(gameDate1);
-    //var date = gameDate2.getDate();
-    //var month = gameDate2.getMonth(); //Be careful! January is 0 not 1
-    //var year = gameDate2.getFullYear();
-    //var currentDate = game.gameDate;
-    var currentDate = new Date(game.gameDate);
-    var year = currentDate.getFullYear();
-    var month = currentDate.getMonth();
-    if (month <= 9) {
-        month = 0 + month
-    };
+    const date = new Date(game.gameDatetime);
+    const year = date.getFullYear();
+    let month = date.getMonth();
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    let day = date.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    let hours = date.getHours();
+    if (hours < 10) {
+        hours = `0${hours}`;
+    }
+    let minutes = date.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`;
+    }
 
-    var day = currentDate.getDate();
-    var dateInput = year + "-" + month + "-" + day;
-    console.log(dateInput);
-    //var dateInput = 20 + year + "-" + month + "-" + date;
-    //    dateInput.toString();
-    //  console.log(dateInput);
-    //  var dateString = date + "-" + (month + 1) + "-" + year;
-    //  var timestamp = gameDate2.getTime();
-    //HH:MM
-    //get first 10 of date time local?
-    //jqueryDatepicker($);
-    //$('#gameDate').datePicker({
-    //    dateFormat: "yy-mm-dd"
-    //});
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
 
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
@@ -201,7 +165,7 @@ function renderEditGame(game) {
     <button id="userAGameBtn">User A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Edit Your Game</h1>
-        <form id="js-edit-form" role="create">
+        <form id="js-edit-form" role="create" data-game-id="${game.id}">
             <fieldset>
                 <legend>Edit Your Game</legend>
 
@@ -215,36 +179,16 @@ function renderEditGame(game) {
                 <input type="text" id="username" name="username" value="${game.user}" required>
                 <br />
             -->
-                <label for="street">Street</label>
-                <input type="street" id="street" name="street" placeholder="123 Main St" required>
+
+                <label for="address">Address</label>
+                <input type="address" id="address" name="address" value="${game.address}" placeholder="123 Main St" required>
                 <br />
 
-                <label for="city">City</label>
-                <input type="city" id="city" name="city" placeholder="Phoenix" required>
+                <label for="gameDatetime">Date & Time</label>
+                <input type="datetime-local" id="gameDatetime" name="gameDatetime" value="${formattedDate}" required />
 
-                <label for="state">State</label>
-                <select id="state" name="state">
-                    <option>AL</option>
-                    <option>AZ</option>
-                    <option>CA</option>
-                </select>
-
-                <label for="zipCode">Zip Code</label>
-                <input type="text" id="zipCode" name="zipCode" pattern="[0-9]{5}" placeholder="55555" required>
-                <br />
-
-
-                <label for="gameDate">Date</label>
-                <input id="gameDate" type="text" name="gameDate" value="${dateInput}" required>
-
-                <label for="gameTime">Time</label>
-                <input type="time" id="gameTime" name="gameTime" value="05:00" required>
-                <br />
-
-                <label for="gameInfo">Additional Info</label>
                 <input type="textarea" id="gameInfo" name="gameInfo" value="${game.gameInfo}">
                 <br />
-
 
                 <button type="submit" id="saveEditGameBtn" class="button">Save Game ></button>
             </fieldset>
