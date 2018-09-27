@@ -33,7 +33,7 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ['username', 'password', 'firstName', 'lastName'];
+  const stringFields = ['username', 'password'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
@@ -105,13 +105,11 @@ router.post('/', jsonParser, (req, res) => {
   let {
     username,
     password,
-    firstName = '',
-    lastName = ''
   } = req.body;
   // username and password come in pre-trimmed, otherwise we throw an error
   // before this
-  firstName = firstName.trim();
-  lastName = lastName.trim();
+  //firstName = firstName.trim();
+  //lastName = lastName.trim();
 
   return User.find({
       username
@@ -133,9 +131,9 @@ router.post('/', jsonParser, (req, res) => {
     .then(hash => {
       return User.create({
         username,
-        password: hash,
-        firstName,
-        lastName
+        password: hash //,
+        //firstName,
+        //lastName
       });
     })
     .then(user => {
@@ -169,11 +167,13 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   return User.findById(req.params.id)
+    .populate("gameEvents")
     .then((user => {
       res.json({
         id: user._id,
-        firstName: user.findById,
-        lastName: user.lastName,
+        gameEvents: user.gameEvents.serialize(),
+        //firstName: user.findById,
+        //lastName: user.lastName,
         username: user.username,
         password: user.password
       })

@@ -1,5 +1,5 @@
 {
-    "host": "artyJones",
+    "user": "artyJones",
     "gameTitle": "Monopoly",
     "maxPlayers": "4",
     "gameDate": "1470016976609",
@@ -15,7 +15,7 @@
         }]
 } {
         "id": 3,
-        "host": "artyJones",
+        "user": "artyJones",
         "gameTitle": "Conan",
         "maxPlayers": "4",
         "gameDate": "1470016976609",

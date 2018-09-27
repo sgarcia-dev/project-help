@@ -3,8 +3,14 @@ global.DATABASE_URL = 'mongodb://localhost/test-games-db';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-const {app, runServer, closeServer} = require('../server');
-const {User} = require('../users');
+const {
+  app,
+  runServer,
+  closeServer
+} = require('../server');
+const {
+  User
+} = require('../users');
 
 const expect = chai.expect;
 
@@ -13,7 +19,7 @@ const expect = chai.expect;
 // see: https://github.com/chaijs/chai-http
 chai.use(chaiHttp);
 //
-describe('/api/user', function() {
+describe('/api/user', function () {
   const username = 'exampleUser';
   const password = 'examplePass';
   const firstName = 'Example';
@@ -24,30 +30,30 @@ describe('/api/user', function() {
   const firstNameB = 'ExampleB';
   const lastNameB = 'UserB';
 
-  before(function() {
+  before(function () {
     return runServer();
   });
 
-  after(function() {
+  after(function () {
     return closeServer();
   });
 
-  beforeEach(function() {});
+  beforeEach(function () {});
 
-  afterEach(function() {
+  afterEach(function () {
     return User.remove({});
   });
 
-  describe('/api/users', function() {
-    describe('POST', function() {
-      it('Should reject users with missing username', function() {
+  describe('/api/users', function () {
+    describe('POST', function () {
+      it('Should reject users with missing username', function () {
         return chai
           .request(app)
           .post('/api/users')
           .send({
             password,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -65,14 +71,14 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should reject users with missing password', function() {
+      it('Should reject users with missing password', function () {
         return chai
           .request(app)
           .post('/api/users')
           .send({
             username,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -90,7 +96,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('password');
           });
       });
-      it('Should reject users with non-string username', function() {
+      it('Should reject users with non-string username', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -98,7 +104,7 @@ describe('/api/user', function() {
             username: 1234,
             password,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -118,7 +124,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should reject users with non-string password', function() {
+      it('Should reject users with non-string password', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -126,7 +132,7 @@ describe('/api/user', function() {
             username,
             password: 1234,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -146,7 +152,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('password');
           });
       });
-      it('Should reject users with non-string first name', function() {
+      it('Should reject users with non-string first name', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -173,7 +179,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('firstName');
           });
       });
-      it('Should reject users with non-string last name', function() {
+      it('Should reject users with non-string last name', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -181,7 +187,7 @@ describe('/api/user', function() {
             username,
             password,
             firstName,
-            lastName: 1234, 
+            lastName: 1234,
             id
           })
           .then(() =>
@@ -201,7 +207,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('lastName');
           });
       });
-      it('Should reject users with non-trimmed username', function() {
+      it('Should reject users with non-trimmed username', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -209,7 +215,7 @@ describe('/api/user', function() {
             username: ` ${username} `,
             password,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -229,7 +235,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should reject users with non-trimmed password', function() {
+      it('Should reject users with non-trimmed password', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -237,7 +243,7 @@ describe('/api/user', function() {
             username,
             password: ` ${password} `,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -257,7 +263,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('password');
           });
       });
-      it('Should reject users with empty username', function() {
+      it('Should reject users with empty username', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -265,7 +271,7 @@ describe('/api/user', function() {
             username: '',
             password,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -285,7 +291,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should reject users with password less than ten characters', function() {
+      it('Should reject users with password less than ten characters', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -293,7 +299,7 @@ describe('/api/user', function() {
             username,
             password: '123456789',
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -313,7 +319,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('password');
           });
       });
-      it('Should reject users with password greater than 72 characters', function() {
+      it('Should reject users with password greater than 72 characters', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -321,7 +327,7 @@ describe('/api/user', function() {
             username,
             password: new Array(73).fill('a').join(''),
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(() =>
@@ -341,22 +347,22 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('password');
           });
       });
-      it('Should reject users with duplicate username', function() {
+      it('Should reject users with duplicate username', function () {
         // Create an initial user
         return User.create({
-          username,
-          password,
-          firstName,
-          lastName, 
-          id
-        })
+            username,
+            password,
+            firstName,
+            lastName,
+            id
+          })
           .then(() =>
             // Try to create a second user with the same username
             chai.request(app).post('/api/users').send({
               username,
               password,
               firstName,
-              lastName, 
+              lastName,
               id
             })
           )
@@ -377,7 +383,7 @@ describe('/api/user', function() {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should create a new user', function() {
+      it('Should create a new user', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -385,7 +391,7 @@ describe('/api/user', function() {
             username,
             password,
             firstName,
-            lastName, 
+            lastName,
             id
           })
           .then(res => {
@@ -394,7 +400,7 @@ describe('/api/user', function() {
             expect(res.body).to.have.keys(
               'username',
               'firstName',
-              'lastName', 
+              'lastName',
               'id'
             );
             expect(res.body.username).to.equal(username);
@@ -414,7 +420,7 @@ describe('/api/user', function() {
             expect(passwordIsCorrect).to.be.true;
           });
       });
-      it('Should trim firstName and lastName', function() {
+      it('Should trim firstName and lastName', function () {
         return chai
           .request(app)
           .post('/api/users')
@@ -430,7 +436,7 @@ describe('/api/user', function() {
             expect(res.body).to.have.keys(
               'username',
               'firstName',
-              'lastName', 
+              'lastName',
               'id'
             );
             expect(res.body.username).to.equal(username);
@@ -448,29 +454,26 @@ describe('/api/user', function() {
       });
     });
 
-    describe('GET', function() {
-      it('Should return an empty array initially', function() {
+    describe('GET', function () {
+      it('Should return an empty array initially', function () {
         return chai.request(app).get('/api/users').then(res => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('array');
           expect(res.body).to.have.length(0);
         });
       });
-      it('Should return an array of users', function() {
-        return User.create(
-          {
+      it('Should return an array of users', function () {
+        return User.create({
             username,
             password,
             firstName,
             lastName
-          },
-          {
+          }, {
             username: usernameB,
             password: passwordB,
             firstName: firstNameB,
             lastName: lastNameB
-          }
-        )
+          })
           .then(() => chai.request(app).get('/api/users'))
           .then(res => {
             expect(res).to.have.status(200);

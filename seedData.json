@@ -1,6 +1,6 @@
     {
         "id": 1,
-        "host": "andyFaegan",
+        "user": "andyFaegan",
         "gameTitle": "Settlers of Catan",
         "maxPlayers": "6",
         "gameDate": "1470016976609",
@@ -33,7 +33,7 @@
         ]
     } {
         "id": 2,
-        "host": "marissaCole",
+        "user": "marissaCole",
         "gameTitle": "King of Tokyo",
         "maxPlayers": "7",
         "gameDate": "1470016976609",
@@ -69,7 +69,7 @@
         ]
     } {
         "id": 3,
-        "host": "andyFaegan",
+        "user": "andyFaegan",
         "gameTitle": "Conan",
         "maxPlayers": "4",
         "gameDate": "1470016976609",

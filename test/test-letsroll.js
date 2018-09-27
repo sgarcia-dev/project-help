@@ -7,7 +7,7 @@ const {createAuthToken} = require("../auth/router");
 const { app, runServer, closeServer } = require('../server');
 //const { User } = require('../users/models');
 //const { GameEvent } = require('../gameEvents/models');
-//const {seedDatabase, tearDownDb, generateEventData, preAuthHost} = require("../userSeedData.json");
+//const {seedDatabase, tearDownDb, generateEventData, preAuthUser} = require("../userSeedData.json");
 //
 
 const expect = chai.expect;

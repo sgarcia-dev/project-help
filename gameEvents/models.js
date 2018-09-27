@@ -7,8 +7,8 @@ var commentSchema = new mongoose.Schema({
 });
 
 const gameEventSchema = new mongoose.Schema({
-    //host:      { type: String, required: true },
-    host: {
+    //user:      { type: String, required: true },
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         //type: String,
         ref: 'User'
@@ -43,24 +43,37 @@ const gameEventSchema = new mongoose.Schema({
     gameInfo: {
         type: String
     }
-}) //consider getting rid of comments and attendees and just do attendee count, focus on mongo crud and maybe then authentication
-
-gameEventSchema.pre('find', function (next) {
-    this.populate('user');
-    next();
+}, {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
 });
 
-gameEventSchema.pre('findOne', function (next) {
-    this.populate('user');
-    next();
-});
+//consider getting rid of comments and attendees and just do attendee count, focus on mongo crud and maybe then authentication
 
-//gameEventSchema.post('find', user) {
-//   this.populate('host', username);
-// next();
-//};
+//gameEventSchema.pre('find', function (next) {
+//    this.populate('user');
+//    next();
+//});
 
-gameEventSchema.virtual('hostName').get(function () {
+//gameEventSchema.pre('findOne', function (next) {
+//  this.populate('user');
+//   next();
+//});
+
+//gameEventSchema.pre('find', function (next) { //, user) {
+//    this.populate('user'); //, username);
+//    next();
+//});
+
+//gameEventSchema.virtual('user_id').get(function () {
+//   return `${this.user._id}`; //.trim();
+//});
+
+gameEventSchema.virtual('user_name').get(function () {
     return `${this.user.username}`.trim();
 });
 
@@ -69,9 +82,17 @@ gameEventSchema.virtual('address').get(function () {
 });
 
 gameEventSchema.methods.serialize = function () {
+    let user;
+    if (typeof this.user.serialize === 'function') {
+        user = this.user.serialize();
+    } else {
+        user = this.user;
+    }
+
     return {
         id: this._id,
-        host: this.hostName,
+        //user: this.user, //_id,
+        user: user, //this.user_name,
         gameTitle: this.gameTitle,
         maxPlayers: this.maxPlayers,
         gameDate: this.gameDate,

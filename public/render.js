@@ -9,7 +9,7 @@ function renderIntro() {
 <h1 class="redColor center fontPermMarker">LET'S ROLL</h1>
 <h3 class="blueColor center fontJosefinSans">TABLETOP SCHEDULER</h3>
 <p>Play more board games (or anything else) with Let's Roll tabletop scheduler! The app is still in
-    production but when complete you will be able to host a game session as well as sign up to attend other
+    production but when complete you will be able to user a game session as well as sign up to attend other
     users games, add comments, and connect to the board game geek api to grab more info on the games you
     would like to play.</p>
 <p>
@@ -49,8 +49,8 @@ function renderSignup() {
         <form id="js-signup-form" role="signup">
             <fieldset>
                 <legend>Sign Up</legend>
-                <label for="userName">User Name</label>
-                <input type="text" id="userName" name="userName" placeholder="Enter your username here" required><br />
+                <label for="username">User Name</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username here" required><br />
                 <label for="password">Password</label>
                 <input type="text" id="password" name="password" placeholder="Enter your password here" required><br />
                 <button type="submit" id="submitSignUpUserBtn" class="button">Sign Up ></button>
@@ -66,21 +66,21 @@ function renderSignup() {
 function renderDashboard() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
-    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
+    <button id="userAGameBtn">User A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     <h1>Welcome!</h1>
             <button id="viewGamesBtn" class="dashButton orange">View Games ></button>
             <!-- img tbd -->
        
             <!-- img tbd -->
-            <button id="hostAGameBtn" class="dashButton blue">Host a Game ></button>
+            <button id="userAGameBtn" class="dashButton blue">User a Game ></button>
     `;
     $('#main').html(toRender);
 }
 
-/*maybe add instead of in renderView and renderHost, etc
+/*maybe add instead of in renderView and renderUser, etc
 function renderNavigation() {
     let toRender = `
-    <a href="#" id="renderDashboardBtn">DASHBOARD</a> | <a href="#" id="hostAGameBtn">Host A Game</a> | <a href="#" id="viewGamesBtn">View Games</a>
+    <a href="#" id="renderDashboardBtn">DASHBOARD</a> | <a href="#" id="userAGameBtn">User A Game</a> | <a href="#" id="viewGamesBtn">View Games</a>
     `;
     $('#nav').html(toRender);
 }*/
@@ -91,7 +91,7 @@ function renderViewGames() {
     <nav role="navigation">
     <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
 
-    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
+    <button id="userAGameBtn">User A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>View Games</h1>
         <div class="cards">
@@ -100,16 +100,16 @@ function renderViewGames() {
     $('#main').html(toRender);
 }
 
-function renderHostAGame() {
+function renderUserAGame() {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
     <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
-    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
+    <button id="userAGameBtn">User A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Create Your Game</h1>
         <form id="js-create-form" role="create">
             <fieldset>
-                <legend>Host a Game</legend>
+                <legend>User a Game</legend>
 
                 <label for="gameTitle">Game Title</label>
                 <input type="text" id="gameTitle" name="gameTitle" placeholder="Monopoly" required>
@@ -117,10 +117,10 @@ function renderHostAGame() {
                 <input type="number" id="maxPlayers" name="maxPlayers" placeholder="6" required>
                 <br />
 
-                <label for="username">Host Name</label>
+             <!--   <label for="username">User Name</label>
                 <input type="text" id="username" name="username" placeholder="John Doe" required>
                 <br />
-
+            -->
                 <label for="street">Street</label>
                 <input type="street" id="street" name="street" placeholder="123 Main St" required>
                 <br />
@@ -198,7 +198,7 @@ function renderEditGame(game) {
     let toRender = `
     <div id="dashTop" class="fontPermMarker">LET'S ROLL!</div>
     <nav role="navigation" id="nav"> <!-- a href="#" id="renderDashboardBtn">DASHBOARD</a> | -->
-    <button id="hostAGameBtn">Host A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
+    <button id="userAGameBtn">User A Game</button> | <button id="viewGamesBtn">View Games</button> | <button id="logoutBtn">LOGOUT</button>
     </nav>
         <h1>Edit Your Game</h1>
         <form id="js-edit-form" role="create">
@@ -211,10 +211,10 @@ function renderEditGame(game) {
                 <input type="number" id="maxPlayers" name="maxPlayers" value="${game.maxPlayers}" required>
                 <br />
 
-                <label for="username">Host Name</label>
-                <input type="text" id="username" name="username" value="${game.host}" required>
+             <!--   <label for="username">User Name</label>
+                <input type="text" id="username" name="username" value="${game.user}" required>
                 <br />
-
+            -->
                 <label for="street">Street</label>
                 <input type="street" id="street" name="street" placeholder="123 Main St" required>
                 <br />

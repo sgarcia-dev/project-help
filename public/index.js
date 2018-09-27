@@ -20,7 +20,8 @@ function getGameEvents(callbackFn) {
 function saveEditGame(gameID, callbackFn) {
     const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
     const maxPlayers = $("#maxPlayers").val();
-    const host = $("#username").val();
+    //const user = $("#username").val();
+    const user = localStorage.getItem("user_id");
     const street = $("#street").val();
     const city = $("#city").val();
     const state = $("#state").val();
@@ -32,16 +33,18 @@ function saveEditGame(gameID, callbackFn) {
     const newGame = {
         gameTitle: gameTitle,
         maxPlayers: maxPlayers,
-        host: host,
-        street: street,
-        city: city,
-        state: state,
-        zipCode: zipCode,
+        user: user,
+        location: {
+            street: street,
+            city: city,
+            state: state,
+            zipCode: zipCode
+        },
         gameInfo: gameInfo,
         gameDate: gameDate,
         gameTime: gameTime
     };
-    console.log(newGame);
+    console.log('newGameput', newGame);
 
 
     $.ajax({
@@ -59,6 +62,7 @@ function saveEditGame(gameID, callbackFn) {
             console.error(err);
         }
     });
+    //localStorage.removeItem('')
     event.preventDefault();
 }
 
@@ -99,6 +103,7 @@ function displayGameEvents(data) {
         var year = gameDate2.getFullYear();
         var dateString = date + "-" + (month + 1) + "-" + year;
         var timestamp = gameDate2.getTime();
+
         ////////////////
         //Scheduled repair date: 
         //<b>${moment(data.repairInfo[i].date).format('MMM Do YYYY')}
@@ -111,7 +116,7 @@ function displayGameEvents(data) {
                 ${dateString} 
             </button>
             <div class="panel">
-              <p>HOST: ${this.host}</p>
+              <p>HOST: ${this.user}</p>
               <p>DESCRIPTION: ${this.gameInfo}</p>
               <p>MAX PLAYERS: ${this.maxPlayers}</p>
               <p>LOCATION: ${this.address}</p>
@@ -162,7 +167,7 @@ function addNewGameEvent() {
     //$('#js-create-form').on('submit', function (event) {
     const gameTitle = $("#gameTitle").val(); //const gameTitle = $gameTitle;
     const maxPlayers = $("#maxPlayers").val();
-    const host = $("#username").val();
+    const user = $("#username").val();
     const street = $("#street").val();
     const city = $("#city").val();
     const state = $("#state").val();
@@ -174,16 +179,18 @@ function addNewGameEvent() {
     const newGame = {
         gameTitle: gameTitle,
         maxPlayers: maxPlayers,
-        host: host,
-        street: street,
-        city: city,
-        state: state,
-        zipCode: zipCode,
+        user: user,
+        location: {
+            street: street,
+            city: city,
+            state: state,
+            zipCode: zipCode
+        },
         gameInfo: gameInfo,
         gameDate: gameDate,
         gameTime: gameTime
     };
-    //console.log(newGame);
+    console.log('newGame', newGame);
 
     $.ajax({
         headers: {
@@ -336,6 +343,7 @@ function login() {
         success: res => {
             localStorage.setItem('authToken', res.authToken);
             localStorage.setItem('username', newUser.username);
+            localStorage.setItem('user_id', newUser.id);
             console.log('setitem ' + newUser.username)
             console.log('localstorage set');
             STATE.isLoggedIn = true;
@@ -418,7 +426,7 @@ function bindEvents() {
         renderViewGames();
     });
 
-    $('#main').on('click', '#hostAGameBtn', renderHostAGame);
+    $('#main').on('click', '#userAGameBtn', renderUserAGame);
 
     $('#main').on('click', '#renderDashboardBtn', renderDashboard);
 
